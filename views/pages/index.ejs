@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <% include ../partials/head %>
-</head>
+<% include ../partials/head %>
 <body class="container">
-
-    <header>
-        <% include ../partials/header %>
-    </header>
-
+    <% include ../partials/header %>
     <main>
-        <div class="jumbotron">
-            <h1>This is great</h1>
-            <p>Welcome to templating using EJS</p>
-        </div>
+        <% if (posts.length) { %>
+            <ul>
+                <% posts.forEach(function(post){ %>
+                    <li><%= post.title %></li>
+                <% }) %>
+            </ul>
+        <% } %>
     </main>
 
-    <footer>
-        <% include ../partials/footer %>
-    </footer>
-    
+    <% include ../partials/footer %>    
 </body>
 </html>
