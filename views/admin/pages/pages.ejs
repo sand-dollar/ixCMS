@@ -3,10 +3,22 @@
 <% include ../partials/head %>
 <body class="container">
   <% include ../partials/header %>
-  <main ng-app="myApp" ng-controller="myCtrl">
+  <main ng-app="myApp" ng-controller="pagesCtrl">
   <h1>Pages</h1>
 
-    
-  </main>
+<div>
+<a href="/admin/menu/editor"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add a new page</a>
+</div>
+
+
+
+<div>
+            <ul>
+                    <li ng-repeat="page in pages"><a href="{{page.url}}"></a>{{page.title}}</li>
+            </ul>
+    </div>
+
+    </main>
+
 </body>
 </html>

@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
+var ObjectId = mongodb.ObjectID;
 var app = express();
 var databaseUrl = 'mongodb://localhost:27017/ixcms_test';
 
@@ -11,7 +12,7 @@ app.use(bodyParser.json()); // for parsing application/json
 app.set('view engine', 'ejs');
 
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
@@ -49,23 +50,26 @@ app.get('/', function(req, res) {
       title: 'post1 title',
       abstract: 'sample abstract',
       time: '13:00 1.1.2016',
+      url: '/pages/xxx',
       tags: ['tag1', 'tag2', 'tag3']
     }, {
       title: 'post2 title',
       abstract: 'sample abstract',
       time: '13:00 1.1.2016',
+      url: '/pages/xxx',
       tags: ['tag1', 'tag2', 'tag3']
     }, {
       title: 'post3 title',
       abstract: 'sample abstract',
       time: '13:00 1.1.2016',
+      url: '/pages/xxx',
       tags: ['tag1', 'tag2', 'tag3']
     }]
   });
 });
 
 
-app.get('/about', function(req, res) {
+app.get('/about', (req, res) => {
   res.render('pages/page', {
     title: 'Title',
     text: 'sample text',
@@ -77,21 +81,24 @@ app.get('/about', function(req, res) {
   });
 });
 
+/**********************************************************************/
+/**********************************************************************/
+/**********************************************************************/
 
-app.get('/login', function(req, res) {
-  res.render('admin/pages/login');
+app.get('/login', (req, res) => {
+  res.render('admin/menu/login');
   // TODO after login redirect to /admin/overview
   // TODO redirect to login, if not logged in.
 });
 
 
-app.get('/admin/pages/:page', function(req, res) {
+app.get('/admin/menu/:page', (req, res) => {
   let page = req.params.page;
   res.render('admin/pages/' + page);
 });
 
 
-app.get('/admin/settings', function(req, res) {
+app.get('/admin/settings', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
@@ -108,9 +115,7 @@ app.get('/admin/settings', function(req, res) {
   });
 });
 
-
-
-app.post('/admin/settings', function(req, res) {
+app.post('/admin/settings', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
@@ -131,13 +136,86 @@ app.post('/admin/settings', function(req, res) {
   });
 });
 
+
+// page: title, url, text
+// Not used
+app.get('/admin/pages', (req, res) => {
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      let doc = db.collection('pages').find({}, {text: false}).toArray(function(err, docs) {
+        res.send(docs);
+        db.close();
+      });
+    }
+  });
+});
+
+// Not used
+app.post('/admin/pages', (req, res) => {
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      var collection = db.collection("pages");
+      let value = req.body;
+      value._id = 0;
+      console.log(value);
+      collection.save(value, function(error, result) {
+        if (error) {
+          console.log('Settings update error: ' + error);
+        } else {
+          console.log('Settings update successful!');
+        }
+        db.close();
+      });
+    }
+  });
+});
+
+app.post('/admin/editor/save', (req, res) => {
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      var collection = db.collection("pages");
+      let value = req.body;
+      if (!value._id) {
+        // Insert a new entry
+        collection.insert(value, function(error, result) {
+          if (error || result.insertedCount !== 1) {
+            console.log('Entry insert error: ' + error);
+          } else {
+            console.log('Settings update successful!');
+            res.send({ _id: result.ops[0]._id });  // Return newly generated ID
+          }
+          db.close();
+        });
+      } else {
+        // Edit entry
+        value._id = ObjectId(value._id);
+        collection.findOneAndUpdate({ _id: value._id }, value)
+          .then(function (result) {
+            console.log(result);
+          }, function (error) {
+            console.log('Entry update error: ' + error);
+            // TODO Try insert as a fallback
+          });
+      }
+    }
+  });
+});
+
+
+
 // must be the last route
 // TODO render a helpful page here.
-/*app.get('*', function(req, res) {
+/*app.get('*', (req, res) => {
   res.status(404).send({url: req.url});
   return;
 });*/
 
-app.listen(3000, function() {
+app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
