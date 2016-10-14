@@ -1,10 +1,13 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 var app = express();
 var databaseUrl = 'mongodb://localhost:27017/ixcms_test';
 
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json()); // for parsing application/json
+//app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.set('view engine', 'ejs');
 
 
@@ -82,44 +85,45 @@ app.get('/login', function(req, res) {
 });
 
 
-app.get('/admin/:page', function(req, res) {
-  var page = req.params.page;
-
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      console.log('Connection established to', databaseUrl);
-
-      // Get the documents collection
-      var collection = db.collection('posts');
-
-      // TODO load this to angular $scope
-
-    }
-  });
-
+app.get('/admin/pages/:page', function(req, res) {
+  let page = req.params.page;
   res.render('admin/pages/' + page);
 });
 
 
-
-app.put('/admin/:page', function(req, res) {
-  var page = req.params.page;
+app.get('/admin/settings', function(req, res) {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
     } else {
-      console.log('Connection established to', databaseUrl);
-
-      var collection = db.collection(page);  // SAVE ANGULAR $scope.page to collection
-
-      // Insert some users
-      collection.insert(req.body, function(error, result) {
-        if (error) {
-          console.log(error);
+      let doc = db.collection('settings').find({}).toArray(function(err, docs) {
+        if (docs.length === 1) {
+          res.send(docs[0]);
         } else {
-          console.log('Inserted %d documents. The documents are:', result.length, result);
+          res.send({});
+        }
+        db.close();
+      });
+    }
+  });
+});
+
+
+
+app.post('/admin/settings', function(req, res) {
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      var collection = db.collection("settings");
+      let value = req.body;
+      value._id = 0;
+      console.log(value);
+      collection.save(value, function(error, result) {
+        if (error) {
+          console.log('Settings update error: ' + error);
+        } else {
+          console.log('Settings update successful!');
         }
         db.close();
       });
