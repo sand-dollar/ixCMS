@@ -68,7 +68,8 @@ app.get('/', (req, res) => {
   });
 });
 
-
+// Remove this route. This is replaced with /page/:page
+// Pokud budeme chtit vynechat angular pro navstevnika, budeme potrebovat dalsi route s template.
 app.get('/about', (req, res) => {
   res.render('pages/page', {
     title: 'Title',
@@ -78,6 +79,26 @@ app.get('/about', (req, res) => {
     allowComments: true,
     tags: ['tag1, tag2, tag3'],
     status: 'draft'
+  });
+});
+
+app.get('/page/:id', (req, res) => {
+  let id = req.params.id;
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      console.log(ObjectId(id));
+      let doc = db.collection('pages').findOne({ _id: ObjectId(id) })
+        .then(function (result) {
+          console.log(result);
+          res.send(result);
+          db.close();
+        }, function(error) {
+          console.log('Page not found. ID: ' + id);
+          db.close();
+      });
+    }
   });
 });
 
@@ -91,7 +112,6 @@ app.get('/login', (req, res) => {
   // TODO redirect to login, if not logged in.
 });
 
-
 app.get('/admin/menu/:page', (req, res) => {
   let page = req.params.page;
   res.render('admin/pages/' + page);
@@ -103,7 +123,7 @@ app.get('/admin/settings', (req, res) => {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
     } else {
-      let doc = db.collection('settings').find({}).toArray(function(err, docs) {
+      db.collection('settings').find({}).toArray(function(err, docs) {
         if (docs.length === 1) {
           res.send(docs[0]);
         } else {
@@ -138,7 +158,7 @@ app.post('/admin/settings', (req, res) => {
 
 
 // page: title, url, text
-// Not used
+// TODO nahradit ne-admin metodou, protoze tohle potrebujeme i na index.ejs
 app.get('/admin/pages', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
@@ -152,27 +172,19 @@ app.get('/admin/pages', (req, res) => {
   });
 });
 
-// Not used
-app.post('/admin/pages', (req, res) => {
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      var collection = db.collection("pages");
-      let value = req.body;
-      value._id = 0;
-      console.log(value);
-      collection.save(value, function(error, result) {
-        if (error) {
-          console.log('Settings update error: ' + error);
-        } else {
-          console.log('Settings update successful!');
-        }
-        db.close();
-      });
-    }
-  });
+
+
+// New page
+app.get('/admin/editor', (req, res) => {
+  res.redirect('/admin/editor/' + ObjectId());
 });
+
+// Edit existing page with ID
+app.get('/admin/editor/:id', (req, res) => {
+  let id = req.params.id;
+  res.render('admin/pages/editor');
+});
+
 
 app.post('/admin/editor/save', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
@@ -181,29 +193,32 @@ app.post('/admin/editor/save', (req, res) => {
     } else {
       var collection = db.collection("pages");
       let value = req.body;
-      if (!value._id) {
-        // Insert a new entry
-        collection.insert(value, function(error, result) {
-          if (error || result.insertedCount !== 1) {
-            console.log('Entry insert error: ' + error);
-          } else {
-            console.log('Settings update successful!');
-            res.send({ _id: result.ops[0]._id });  // Return newly generated ID
-          }
-          db.close();
+      value._id = ObjectId(value._id);
+      collection.save(value)
+        .then(function (result) {
+          console.log('Saved id: ' + value._id);
+        }, function (error) {
+          console.log('Entry update error: ' + error);
         });
-      } else {
-        // Edit entry
-        value._id = ObjectId(value._id);
-        collection.findOneAndUpdate({ _id: value._id }, value)
-          .then(function (result) {
-            console.log(result);
-          }, function (error) {
-            console.log('Entry update error: ' + error);
-            // TODO Try insert as a fallback
-          });
-      }
     }
+  });
+});
+
+app.post('/admin/editor/delete/:id', (req, res) => {
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      var collection = db.collection("pages");
+      collection.deleteOne({ _id: ObjectId(req.params.id) }, function (error, result) {
+        if (error) {
+          console.log('error');
+        } else {
+          console.log('success delete');
+        }
+      });
+    }
+    res.sendStatus(200);
   });
 });
 
