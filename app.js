@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Remove this route. This is replaced with /page/:page
+// REMOVE this route. This is replaced with /page/:page
 // Pokud budeme chtit vynechat angular pro navstevnika, budeme potrebovat dalsi route s template.
 app.get('/about', (req, res) => {
   res.render('pages/page', {
@@ -88,10 +88,8 @@ app.get('/page/:id', (req, res) => {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
     } else {
-      console.log(ObjectId(id));
       let doc = db.collection('pages').findOne({ _id: ObjectId(id) })
         .then(function (result) {
-          console.log(result);
           res.send(result);
           db.close();
         }, function(error) {
@@ -102,12 +100,16 @@ app.get('/page/:id', (req, res) => {
   });
 });
 
+
+
+
 /**********************************************************************/
 /**********************************************************************/
 /**********************************************************************/
 
 app.get('/login', (req, res) => {
-  res.render('admin/menu/login');
+  //res.render('admin/menu/login');
+  res.redirect('/admin/menu/overview');
   // TODO after login redirect to /admin/overview
   // TODO redirect to login, if not logged in.
 });
@@ -143,7 +145,6 @@ app.post('/admin/settings', (req, res) => {
       var collection = db.collection("settings");
       let value = req.body;
       value._id = 0;
-      console.log(value);
       collection.save(value, function(error, result) {
         if (error) {
           console.log('Settings update error: ' + error);
@@ -158,7 +159,6 @@ app.post('/admin/settings', (req, res) => {
 
 
 // page: title, url, text
-// TODO nahradit ne-admin metodou, protoze tohle potrebujeme i na index.ejs
 app.get('/admin/pages', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
@@ -172,7 +172,19 @@ app.get('/admin/pages', (req, res) => {
   });
 });
 
-
+// page: title, url, text, abstract, date + time, tags, status, allowComments
+app.get('/admin/posts', (req, res) => {
+  MongoClient.connect(databaseUrl, function (error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      let doc = db.collection('posts').find({}, { text: false }).toArray(function (err, docs) {
+        res.send(docs);
+        db.close();
+      });
+    }
+  });
+});
 
 // New page
 app.get('/admin/editor', (req, res) => {

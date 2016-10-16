@@ -4,7 +4,6 @@ app.controller('settingsCtrl', function ($scope, $http) {
 
   $http.get('/admin/settings')
     .then(function (result) {
-      console.log(result.data);
       $scope.settings = result.data;
     }, function (error) {
       console.log(error);
@@ -27,12 +26,22 @@ app.controller('commentsCtrl', function ($scope, $http) {
 });
 
 app.controller('postsCtrl', function ($scope, $http) {
+  $http.get('/admin/posts')
+    .then(function (result) {
+      $scope.pages = result.data;
+    }, function (error) {
+      console.log(error);
+    });
+  
+  $scope.deletePost = function (id) {
+
+  };
+
 });
 
 app.controller('pagesCtrl', function ($scope, $http) {
   $http.get('/admin/pages')
     .then(function (result) {
-      console.log(result.data);
       $scope.pages = result.data;
     }, function (error) {
       console.log(error);
@@ -73,7 +82,6 @@ app.controller('editorCtrl', function ($scope, $http, $window) {
     .then(function (result) {
       Object.assign($scope.editor, result.data);
       simplemde.value($scope.editor.text);
-      console.log($scope.editor);
     }, function (error) {
       console.log(error);
     });
