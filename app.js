@@ -82,25 +82,6 @@ app.get('/about', (req, res) => {
   });
 });
 
-app.get('/page/:id', (req, res) => {
-  let id = req.params.id;
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      let doc = db.collection('pages').findOne({ _id: ObjectId(id) })
-        .then(function (result) {
-          res.send(result);
-          db.close();
-        }, function(error) {
-          console.log('Page not found. ID: ' + id);
-          db.close();
-      });
-    }
-  });
-});
-
-
 
 
 /**********************************************************************/
@@ -186,24 +167,61 @@ app.get('/admin/posts', (req, res) => {
   });
 });
 
-// New page
-app.get('/admin/editor', (req, res) => {
-  res.redirect('/admin/editor/' + ObjectId());
-});
-
-// Edit existing page with ID
-app.get('/admin/editor/:id', (req, res) => {
+app.get('/admin/pages/:id', (req, res) => {
   let id = req.params.id;
-  res.render('admin/pages/editor');
-});
-
-
-app.post('/admin/editor/save', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
     } else {
-      var collection = db.collection("pages");
+      let doc = db.collection('pages').findOne({ _id: ObjectId(id) })
+        .then(function (result) {
+          res.send(result);
+          db.close();
+        }, function(error) {
+          console.log('Page not found. ID: ' + id);
+          db.close();
+      });
+    }
+  });
+});
+
+// TODO refactor together with '/pages/:id'
+app.get('/admin/posts/:id', (req, res) => {
+  let id = req.params.id;
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      let doc = db.collection('posts').findOne({ _id: ObjectId(id) })
+        .then(function (result) {
+          res.send(result);
+          db.close();
+        }, function(error) {
+          console.log('Post not found. ID: ' + id);
+          db.close();
+      });
+    }
+  });
+});
+
+
+// New page
+app.get('/admin/editor/:collection', (req, res) => {
+  res.redirect('/admin/editor/' + req.params.collection + '/' + ObjectId());
+});
+
+// Edit existing page with ID
+app.get('/admin/editor/:collection/:id', (req, res) => {
+  res.render('admin/pages/editor');
+});
+
+// Collection must be 'pages' or 'posts'
+app.post('/admin/editor/:collection/save', (req, res) => {
+  MongoClient.connect(databaseUrl, function(error, db) {
+    if (error) {
+      console.log('Unable to connect to the mongoDB server. Error:', error);
+    } else {
+      var collection = db.collection(req.params.collection);
       let value = req.body;
       value._id = ObjectId(value._id);
       collection.save(value)
@@ -216,12 +234,12 @@ app.post('/admin/editor/save', (req, res) => {
   });
 });
 
-app.post('/admin/editor/delete/:id', (req, res) => {
+app.post('/admin/editor/:collection/delete/:id', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
     if (error) {
       console.log('Unable to connect to the mongoDB server. Error:', error);
     } else {
-      var collection = db.collection("pages");
+      var collection = db.collection(req.params.collection);
       collection.deleteOne({ _id: ObjectId(req.params.id) }, function (error, result) {
         if (error) {
           console.log('error');

@@ -28,13 +28,19 @@ app.controller('commentsCtrl', function ($scope, $http) {
 app.controller('postsCtrl', function ($scope, $http) {
   $http.get('/admin/posts')
     .then(function (result) {
-      $scope.pages = result.data;
+      $scope.posts = result.data;
     }, function (error) {
       console.log(error);
     });
   
   $scope.deletePost = function (id) {
-
+    // TODO show "really" dialog HERE
+    $http.post('/admin/editor/posts/delete/' + id)
+      .then(function (result) {
+        console.log('post deleted');
+        // Remove one element of array based on 'id' index.
+        $scope.posts.splice($scope.posts.findIndex((element, id) => {return element._id === id;}), 1);
+    })
   };
 
 });
@@ -51,8 +57,7 @@ app.controller('pagesCtrl', function ($scope, $http) {
   
   $scope.deletePage = function (id) {
     // TODO show "really" dialog HERE
-
-    $http.post('/admin/editor/delete/' + id)
+    $http.post('/admin/editor/pages/delete/' + id)
       .then(function (result) {
         console.log('page deleted');
         // Remove one element of array based on 'id' index.
@@ -74,11 +79,12 @@ app.controller('editorCtrl', function ($scope, $http, $window) {
   $scope.editor = {};
 
 
-  let location = $window.location.href;
-  $scope.editor._id = location.substr(location.lastIndexOf('/') + 1);
+  let location = $window.location.pathname.split('/');
+  $scope.editor._id = location[location.length - 1];
+  $scope.collection = location[location.length - 2];
 
 
-  $http.get('/page/' + $scope.editor._id)
+  $http.get('/admin/' + $scope.collection + '/' + $scope.editor._id)
     .then(function (result) {
       Object.assign($scope.editor, result.data);
       simplemde.value($scope.editor.text);
@@ -89,7 +95,7 @@ app.controller('editorCtrl', function ($scope, $http, $window) {
   
   $scope.docSave = function () {
     $scope.editor.text = simplemde.value();
-    $http.post('/admin/editor/save', $scope.editor)
+    $http.post('/admin/editor/' + $scope.collection + '/save', $scope.editor)
       .then(function (result) {
         console.log('saved');
       }, function (error) {
@@ -98,8 +104,7 @@ app.controller('editorCtrl', function ($scope, $http, $window) {
   }
 
   $scope.docExit = function () {
-    //$window.history.go(-1);  // BUG: Tohle reseni neudela reload stranky. Ale zase potrebujeme vedet, kam se vratit.
-    $window.location.replace('/admin/menu/pages');  // BUG Co kdyz se chceme vratit na 'admin/posts'
+    $window.location.replace('/admin/menu/' + $scope.collection);
   }
 
 

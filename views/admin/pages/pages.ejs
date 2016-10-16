@@ -7,12 +7,12 @@
   <h1>Pages</h1>
 
   <div>
-    <a href="/admin/editor"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add a new page</a>
+    <a href="/admin/editor/pages"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add a new page</a>
   </div>
 
   <div>
     <ul>
-      <li ng-repeat="page in pages"><a ng-href="/admin/editor/{{page._id}}">{{page.title}}</a>&nbsp;[<a href="#" ng-click="deletePage(page._id)">delete</a>]</li>
+      <li ng-repeat="page in pages"><a ng-href="/admin/editor/pages/{{page._id}}">{{page.title}}</a>&nbsp;[<a href="#" ng-click="deletePage(page._id)">delete</a>]</li>
     </ul>
   </div>
 

@@ -8,12 +8,12 @@
 
 
   <div>
-    <a href="/admin/editor"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add a new post</a>
+    <a href="/admin/editor/posts"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add a new post</a>
   </div>
 
   <div>
     <ul>
-      <li ng-repeat="post in posts"><a ng-href="/admin/editor/{{post._id}}">{{post.title}}</a>&nbsp;[<a href="#" ng-click="deletePost(post._id)">delete</a>]</li>
+      <li ng-repeat="post in posts"><a ng-href="/admin/editor/posts/{{post._id}}">{{post.title}}</a>&nbsp;[<a href="#" ng-click="deletePost(post._id)">delete</a>]</li>
     </ul>
   </div>
     
