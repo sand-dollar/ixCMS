@@ -11,6 +11,8 @@ app.use(bodyParser.json()); // for parsing application/json
 //app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.set('view engine', 'ejs');
 
+var settingsId = 0;
+
 
 app.get('/', (req, res) => {
   MongoClient.connect(databaseUrl, function(error, db) {
@@ -88,6 +90,156 @@ app.get('/about', (req, res) => {
 /**********************************************************************/
 /**********************************************************************/
 
+/**
+ * Get site settings from database.
+ */
+function getSettings() {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        db.collection('settings').find({_id: settingsId}).toArray((err, docs) => {
+          db.close();
+          if (docs.length === 1) {
+            resolve(docs[0]);
+          } else if (docs.length === 0) {
+            resolve({});
+          } else {
+            reject(new Error('Error: Multiple settings entry!'));
+          }
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Save site settings to database.
+ */
+function saveSettings(settings) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        var collection = db.collection("settings");
+        settings._id = settingsId;
+        collection.save(settings, (error, result) => {
+          if (error) {
+            console.log('Settings update error: ' + error);
+            reject(new Error(error));
+          } else {
+            console.log('Settings update successful!');
+            resolve();
+          }
+          db.close();
+        });
+      }
+    });
+  });  
+}
+
+/**
+ * List all articles (pages or posts).
+ */
+function listArticles(collection) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        db.collection(collection).find({}, {text: false}).toArray((err, docs) => {
+          db.close();
+          resolve(docs);
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Get requested article (page or post) with given ID.
+ */
+function getArticle(collection, id) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        db.collection(collection).findOne({ _id: ObjectId(id) })
+          .then((result) => {
+            db.close();
+            resolve(result);
+          }, (error) => {
+            console.log('Article not found. Collection: ' + collection + ', ID: ' + id);
+            db.close();
+            reject(new Error(error));
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Save article (page or post) with given ID.
+ */
+function saveArticle(collection, id, article) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        let dbCollection = db.collection(collection);
+        article._id = ObjectId(id);
+        dbCollection.save(article).then((result) => {
+            console.log('Saved id: ' + article._id);
+            db.close();
+            resolve(article._id);
+          }, (error) => {
+            console.log('Entry update error: ' + error);
+            db.close();
+            reject(new Error(error));
+          }
+        );
+      }
+    });
+  });  
+}
+
+/**
+ * Delete article (page or post) with given ID.
+ */
+function deleteArticle(collection, id) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        let dbCollection = db.collection(collection);
+        dbCollection.deleteOne({ _id: ObjectId(id) }, (error, result) => {
+          if (error) {
+            console.log('error');
+            reject(new Error(error));
+          } else {
+            console.log('success delete');
+            resolve();
+          }
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Login into administration and show 'overview' page.
+ */
 app.get('/login', (req, res) => {
   //res.render('admin/menu/login');
   res.redirect('/admin/menu/overview');
@@ -95,161 +247,151 @@ app.get('/login', (req, res) => {
   // TODO redirect to login, if not logged in.
 });
 
+/**
+ * Show requested page from menu.
+ */
 app.get('/admin/menu/:page', (req, res) => {
-  let page = req.params.page;
-  res.render('admin/pages/' + page);
+  res.render('admin/pages/' + req.params.page);
 });
 
-
+/**
+ * Load site settings from the database.
+ */
 app.get('/admin/settings', (req, res) => {
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      db.collection('settings').find({}).toArray(function(err, docs) {
-        if (docs.length === 1) {
-          res.send(docs[0]);
-        } else {
-          res.send({});
-        }
-        db.close();
-      });
-    }
+  getSettings().then((result) => {
+    res.send(result);
+  }, (error) => {
+    res.send(500);
   });
 });
 
+/**
+ * Save new settings into the database.
+ */
 app.post('/admin/settings', (req, res) => {
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      var collection = db.collection("settings");
-      let value = req.body;
-      value._id = 0;
-      collection.save(value, function(error, result) {
-        if (error) {
-          console.log('Settings update error: ' + error);
-        } else {
-          console.log('Settings update successful!');
-        }
-        db.close();
-      });
-    }
+  saveSettings(req.body).then((result) => {
+    res.sendStatus(200);
+  }, (error) => {
+    res.sendStatus(500);
   });
 });
 
-
-// page: title, url, text
+/**
+ * List all pages (show title, url)
+ */
 app.get('/admin/pages', (req, res) => {
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      let doc = db.collection('pages').find({}, {text: false}).toArray(function(err, docs) {
-        res.send(docs);
-        db.close();
-      });
-    }
+  listArticles('pages').then((result) => {
+    res.send(result);
+  }, (error) => {
+    res.sendStatus(500);
   });
 });
 
-// page: title, url, text, abstract, date + time, tags, status, allowComments
+/**
+ * List all posts (show title, url)
+ */
 app.get('/admin/posts', (req, res) => {
-  MongoClient.connect(databaseUrl, function (error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      let doc = db.collection('posts').find({}, { text: false }).toArray(function (err, docs) {
-        res.send(docs);
-        db.close();
-      });
-    }
+  listArticles('posts').then((result) => {
+    res.send(result);
+  }, (error) => {
+    res.sendStatus(500);
   });
 });
 
+/**
+ * Get all info to given page ID.
+ * Currently: title, url, text.
+ */
 app.get('/admin/pages/:id', (req, res) => {
-  let id = req.params.id;
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      let doc = db.collection('pages').findOne({ _id: ObjectId(id) })
-        .then(function (result) {
-          res.send(result);
-          db.close();
-        }, function(error) {
-          console.log('Page not found. ID: ' + id);
-          db.close();
-      });
-    }
+  getArticle('pages', req.params.id).then((result) => {
+    res.send(result);
+  }, (error) => {
+    res.sendStatus(500);
   });
 });
 
-// TODO refactor together with '/pages/:id'
+/**
+ * Get all info to given post ID.
+ * Currently: title, url, text, abstract, date, tags, status, allowComments.
+ */
 app.get('/admin/posts/:id', (req, res) => {
-  let id = req.params.id;
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      let doc = db.collection('posts').findOne({ _id: ObjectId(id) })
-        .then(function (result) {
-          res.send(result);
-          db.close();
-        }, function(error) {
-          console.log('Post not found. ID: ' + id);
-          db.close();
-      });
-    }
+  getArticle('posts', req.params.id).then((result) => {
+    res.send(result);
+  }, (error) => {
+    res.sendStatus(500);
   });
 });
 
-
-// New page
-app.get('/admin/editor/:collection', (req, res) => {
-  res.redirect('/admin/editor/' + req.params.collection + '/' + ObjectId());
+/**
+ * Create a new page.
+ */
+app.get('/admin/editor/pages', (req, res) => {
+  res.redirect('/admin/editor/pages/' + ObjectId());
 });
 
-// Edit existing page with ID
-app.get('/admin/editor/:collection/:id', (req, res) => {
+/**
+ * Create a new post.
+ */
+app.get('/admin/editor/posts', (req, res) => {
+  res.redirect('/admin/editor/posts/' + ObjectId());
+});
+
+/**
+ * Show editor for given page with ID.
+ */
+app.get('/admin/editor/pages/:id', (req, res) => {
   res.render('admin/pages/editor');
 });
 
-// Collection must be 'pages' or 'posts'
-app.post('/admin/editor/:collection/save', (req, res) => {
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      var collection = db.collection(req.params.collection);
-      let value = req.body;
-      value._id = ObjectId(value._id);
-      collection.save(value)
-        .then(function (result) {
-          console.log('Saved id: ' + value._id);
-        }, function (error) {
-          console.log('Entry update error: ' + error);
-        });
-    }
-  });
+/**
+ * Show editor for given post with ID.
+ */
+app.get('/admin/editor/posts/:id', (req, res) => {
+  res.render('admin/pages/editor');
 });
 
-app.post('/admin/editor/:collection/delete/:id', (req, res) => {
-  MongoClient.connect(databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      var collection = db.collection(req.params.collection);
-      collection.deleteOne({ _id: ObjectId(req.params.id) }, function (error, result) {
-        if (error) {
-          console.log('error');
-        } else {
-          console.log('success delete');
-        }
-      });
-    }
+/**
+ * Save changes in given page.
+ */
+app.post('/admin/editor/pages/save', (req, res) => {
+  saveArticle('pages', req.body._id, req.body).then((result) => {
     res.sendStatus(200);
-  });
+  }, (error) => {
+    res.sendStatus(500);
+  })
+});
+
+/**
+ * Save changes in given post.
+ */
+app.post('/admin/editor/posts/save', (req, res) => {
+  saveArticle('posts', req.body._id, req.body).then((result) => {
+    res.sendStatus(200);
+  }, (error) => {
+    res.sendStatus(500);
+  })
+});
+
+/**
+ * Delete post with ID.
+ */
+app.post('/admin/editor/posts/delete/:id', (req, res) => {
+  deleteArticle('posts', req.params.id).then((result) => {
+    res.sendStatus(200);
+  }, (error) => {
+    res.sendStatus(500);
+  })
+});
+
+/**
+ * Delete page with ID.
+ */
+app.post('/admin/editor/pages/delete/:id', (req, res) => {
+  deleteArticle('pages', req.params.id).then((result) => {
+    res.sendStatus(200);
+  }, (error) => {
+    res.sendStatus(500);
+  })
 });
 
 
@@ -262,5 +404,5 @@ app.post('/admin/editor/:collection/delete/:id', (req, res) => {
 });*/
 
 app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
+  console.log('ixCMS listening on port 3000!');
 });
