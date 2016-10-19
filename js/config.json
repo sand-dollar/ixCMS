@@ -1,0 +1,4 @@
+{
+  "databaseUrl": "mongodb://localhost:27017/ixcms_test",
+  "settingsId": 0
+}
