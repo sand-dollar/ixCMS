@@ -20,6 +20,13 @@ app.controller('settingsCtrl', function ($scope, $http) {
 });
 
 app.controller('overviewCtrl', function ($scope, $http) {
+    $http.get('/admin/overview')
+    .then(function (result) {
+      $scope.overview = result.data;
+      console.log($scope.overview);
+    }, function (error) {
+      console.log(error);
+    });
 });
 
 app.controller('commentsCtrl', function ($scope, $http) {

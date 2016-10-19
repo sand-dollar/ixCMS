@@ -100,16 +100,18 @@ function getSettings() {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection('settings').find({_id: settingsId}).toArray((err, docs) => {
-          db.close();
-          if (docs.length === 1) {
-            resolve(docs[0]);
-          } else if (docs.length === 0) {
-            resolve({});
-          } else {
-            reject(new Error('Error: Multiple settings entry!'));
+        db.collection('settings').findOne({ _id: settingsId })
+          .then((result) => {
+            db.close();
+            if (result) {
+              resolve(result);
+            } else {
+              resolve({});
+            }
+          }, (err) => {
+            reject(new Error(err));
           }
-        });
+        );
       }
     });
   });
@@ -125,9 +127,8 @@ function saveSettings(settings) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        var collection = db.collection("settings");
         settings._id = settingsId;
-        collection.save(settings, (error, result) => {
+        db.collection("settings").save(settings, (error, result) => {
           if (error) {
             console.log('Settings update error: ' + error);
             reject(new Error(error));
@@ -143,6 +144,34 @@ function saveSettings(settings) {
 }
 
 /**
+ * Get overview/
+ */
+function getOverview() {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        Promise.all([
+          db.collection("pages").count(),
+          db.collection("posts").count(),
+          db.collection('settings').findOne({ _id: settingsId })
+        ])
+          .then(([pageCount, postCount, settings]) => {
+            let siteName = settings ? settings.siteName : '';
+            resolve({ pageCount, postCount, siteName });
+          })
+          .catch(err => {
+            // Receives first rejection among the Promises
+            reject(new Error(err));
+          });
+      }
+    });
+  });
+}
+
+/**
  * List all articles (pages or posts).
  */
 function listArticles(collection) {
@@ -152,9 +181,13 @@ function listArticles(collection) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection(collection).find({}, {text: false}).toArray((err, docs) => {
+        db.collection(collection).find({}, { text: false }).toArray((err, docs) => {
           db.close();
-          resolve(docs);
+          if (err) {
+            reject(new Error(err));
+          } else {
+            resolve(docs);
+          }
         });
       }
     });
@@ -195,9 +228,8 @@ function saveArticle(collection, id, article) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        let dbCollection = db.collection(collection);
         article._id = ObjectId(id);
-        dbCollection.save(article).then((result) => {
+        db.collection(collection).save(article).then((result) => {
             console.log('Saved id: ' + article._id);
             db.close();
             resolve(article._id);
@@ -222,8 +254,7 @@ function deleteArticle(collection, id) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        let dbCollection = db.collection(collection);
-        dbCollection.deleteOne({ _id: ObjectId(id) }, (error, result) => {
+        db.collection(collection).deleteOne({ _id: ObjectId(id) }, (error, result) => {
           if (error) {
             console.log('error');
             reject(new Error(error));
@@ -261,7 +292,18 @@ app.get('/admin/settings', (req, res) => {
   getSettings().then((result) => {
     res.send(result);
   }, (error) => {
-    res.send(500);
+    res.sendStatus(500);
+  });
+});
+
+/**
+ * Get overview.
+ */
+app.get('/admin/overview', (req, res) => {
+  getOverview().then((result) => {
+    res.send(result);
+  }, (error) => {
+    res.sendStatus(500);
   });
 });
 
