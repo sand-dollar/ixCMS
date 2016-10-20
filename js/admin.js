@@ -6,14 +6,21 @@
  */
 
 let express = require('express');
-let config = require('./config');
-let auth = require('./auth');
 let mongodb = require('mongodb');
+let config = require('./config');
 let MongoClient = mongodb.MongoClient;
 let objectId = mongodb.ObjectId;
 let admin = express();
 
-auth.setAuthentication(admin);
+
+// Middleware to check if the user is logged in.
+admin.use((req, res, next) => {
+  if (req.session && req.session.loggedIn) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+});
 
 /**
  * Get site settings from database.

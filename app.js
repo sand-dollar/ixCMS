@@ -7,18 +7,22 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 let mongodb = require('mongodb');
+let session = require('express-session');
 let MongoClient = mongodb.MongoClient;
 let app = express();
 let admin = require('./js/admin');
 let config = require('./js/config');
-let auth = require('./js/auth');
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 // app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({
+  secret: config.sessionSecret,
+  resave: true,
+  saveUninitialized: true,
+}));
 app.set('view engine', 'ejs');
 app.use('/admin', admin);
-
 
 app.get('/', (req, res) => {
   MongoClient.connect(config.databaseUrl, function(error, db) {
@@ -98,17 +102,19 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/authenticate', (req, res) => {
-  auth.logIn(req.body.username, req.body.password, req)
-    .then((success) => {
-      res.sendStatus(200);
-    }, (error) => {
-      res.sendStatus(401);
-    });
+  let username = req.body.username;
+  let password = req.body.password;
+  if(username && username === config.username && password && password === config.password) {
+    req.session.loggedIn = true;
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
 });
 
-
 app.get('/logout', (req, res) => {
-  auth.logOut(req);
+  req.session.destroy();
+  res.redirect('/login');
 });
 
 // must be the last route
@@ -118,6 +124,6 @@ app.get('/logout', (req, res) => {
   return;
 });*/
 
-app.listen(3000, () => {
+app.listen(config.appPort, () => {
   console.log('ixCMS listening on port 3000!');
 });

@@ -1,4 +1,8 @@
 {
+  "username": "admin",  // Default password
+  "password": "admin",  // Default username
   "databaseUrl": "mongodb://localhost:27017/ixcms_test",
-  "settingsId": 0
+  "settingsId": 0,      // ID for mongo database
+  "appPort": 3000,      // Nodejs application port
+  "sessionSecret": "2C44-4D55-WppQ38S"  // Random string for user session
 }

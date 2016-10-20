@@ -3,11 +3,11 @@ let app = angular.module('myApp', []);
 app.controller('loginCtrl', function($scope, $http, $window) {
   $scope.login = {};
 
+  // Authenticate the user
   $scope.submit = function() {
     $http.post('/authenticate', {username: $scope.login.username, password: $scope.login.password})
       .then(function(result) {
-        console.log('login success');
-        // $window.location.pathname = '/admin/menu/overview';
+        $window.location.pathname = '/admin/menu/overview';
       }, function(error) {
         console.log(error);
       });
@@ -75,8 +75,6 @@ app.controller('pagesCtrl', function($scope, $http) {
     }, function(error) {
       console.log(error);
     });
-
-
 
   $scope.deletePage = function(id) {
     // TODO show "really" dialog HERE
