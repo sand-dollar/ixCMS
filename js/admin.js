@@ -5,15 +5,15 @@
  * @module admin
  */
 
-var express = require('express');
-var config = require('./config');
-var auth = require('./auth');
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
-var ObjectId = mongodb.ObjectID;
-var admin = express();
+let express = require('express');
+let config = require('./config');
+let auth = require('./auth');
+let mongodb = require('mongodb');
+let MongoClient = mongodb.MongoClient;
+let objectId = mongodb.ObjectId;
+let admin = express();
 
-admin.use(auth.isLoggedIn);
+auth.setAuthentication(admin);
 
 /**
  * Get site settings from database.
@@ -25,7 +25,7 @@ function getSettings() {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection('settings').findOne({ _id: config.settingsId })
+        db.collection('settings').findOne({_id: config.settingsId})
           .then((result) => {
             db.close();
             if (result) {
@@ -53,7 +53,7 @@ function saveSettings(settings) {
         reject(new Error(error));
       } else {
         settings._id = config.settingsId;
-        db.collection("settings").save(settings, (error, result) => {
+        db.collection('settings').save(settings, (error, result) => {
           if (error) {
             console.log('Settings update error: ' + error);
             reject(new Error(error));
@@ -65,7 +65,7 @@ function saveSettings(settings) {
         });
       }
     });
-  });  
+  });
 }
 
 /**
@@ -79,14 +79,14 @@ function getOverview() {
         reject(new Error(error));
       } else {
         Promise.all([
-          db.collection("pages").count(),
-          db.collection("posts").count(),
-          db.collection('settings').findOne({ _id: config.settingsId }, {siteName: true})
+          db.collection('pages').count(),
+          db.collection('posts').count(),
+          db.collection('settings').findOne({_id: config.settingsId}, {siteName: true}),
         ])
           .then(([pageCount, postCount, siteName]) => {
-            resolve({ pageCount, postCount, siteName });
+            resolve({pageCount, postCount, siteName});
           })
-          .catch(err => {
+          .catch((err) => {
             // Receives first rejection among the Promises
             reject(new Error(err));
           });
@@ -105,7 +105,7 @@ function listArticles(collection) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection(collection).find({}, { text: false }).toArray((err, docs) => {
+        db.collection(collection).find({}, {text: false}).toArray((err, docs) => {
           db.close();
           if (err) {
             reject(new Error(err));
@@ -128,7 +128,7 @@ function getArticle(collection, id) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection(collection).findOne({ _id: ObjectId(id) })
+        db.collection(collection).findOne({_id: objectId(id)})
           .then((result) => {
             db.close();
             resolve(result);
@@ -136,7 +136,7 @@ function getArticle(collection, id) {
             console.log('Article not found. Collection: ' + collection + ', ID: ' + id);
             db.close();
             reject(new Error(error));
-        });
+          });
       }
     });
   });
@@ -152,20 +152,20 @@ function saveArticle(collection, id, article) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        article._id = ObjectId(id);
+        article._id = objectId(id);
         db.collection(collection).save(article).then((result) => {
-            console.log('Saved id: ' + article._id);
-            db.close();
-            resolve(article._id);
-          }, (error) => {
-            console.log('Entry update error: ' + error);
-            db.close();
-            reject(new Error(error));
-          }
+          console.log('Saved id: ' + article._id);
+          db.close();
+          resolve(article._id);
+        }, (error) => {
+          console.log('Entry update error: ' + error);
+          db.close();
+          reject(new Error(error));
+        }
         );
       }
     });
-  });  
+  });
 }
 
 /**
@@ -178,7 +178,7 @@ function deleteArticle(collection, id) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection(collection).deleteOne({ _id: ObjectId(id) }, (error, result) => {
+        db.collection(collection).deleteOne({_id: objectId(id)}, (error, result) => {
           if (error) {
             console.log('error');
             reject(new Error(error));
@@ -283,14 +283,14 @@ admin.get('/posts/:id', (req, res) => {
  * Create a new page.
  */
 admin.get('/editor/pages', (req, res) => {
-  res.redirect('/admin/editor/pages/' + ObjectId());
+  res.redirect('/admin/editor/pages/' + objectId());
 });
 
 /**
  * Create a new post.
  */
 admin.get('/editor/posts', (req, res) => {
-  res.redirect('/admin/editor/posts/' + ObjectId());
+  res.redirect('/admin/editor/posts/' + objectId());
 });
 
 /**
@@ -315,7 +315,7 @@ admin.post('/editor/pages/save', (req, res) => {
     res.sendStatus(200);
   }, (error) => {
     res.sendStatus(500);
-  })
+  });
 });
 
 /**
@@ -326,7 +326,7 @@ admin.post('/editor/posts/save', (req, res) => {
     res.sendStatus(200);
   }, (error) => {
     res.sendStatus(500);
-  })
+  });
 });
 
 /**
@@ -337,7 +337,7 @@ admin.post('/editor/posts/delete/:id', (req, res) => {
     res.sendStatus(200);
   }, (error) => {
     res.sendStatus(500);
-  })
+  });
 });
 
 /**
@@ -348,7 +348,7 @@ admin.post('/editor/pages/delete/:id', (req, res) => {
     res.sendStatus(200);
   }, (error) => {
     res.sendStatus(500);
-  })
+  });
 });
 
 module.exports = admin;

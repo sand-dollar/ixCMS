@@ -7,17 +7,17 @@
   <h1>Editor</h1>
 
 
-<div class="btn-group">
-  <button type="button" class="btn btn-success" ng-click="docSave()">Save document</button>
-  <button type="button" class="btn btn-warning" ng-click="docExit()">Exit without saving</button>
-</div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-success" ng-click="docSave()">Save document</button>
+      <button type="button" class="btn btn-warning" ng-click="docExit()">Exit without saving</button>
+    </div>
 
   
-<div class="form-group">
-  <input class="form-control" id="editorTitle" placeholder="Page title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();">
-  <input class="form-control" id="editorUrl" placeholder="Page URL" ng-model="editor.url">    
-  <textarea class="form-control" id="editorText"></textarea>
-</div>
+    <div class="form-group">
+      <input class="form-control" id="editorTitle" placeholder="Page title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();">
+      <input class="form-control" id="editorUrl" placeholder="Page URL" ng-model="editor.url">    
+      <textarea class="form-control" id="editorText"></textarea>
+    </div>
 
 
 

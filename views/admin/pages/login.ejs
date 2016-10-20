@@ -2,16 +2,16 @@
 <html lang="en">
 <% include ../partials/head %>
 <body class="container">
-    <main>
-        <div class="container">
-            <label><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
+  <main ng-app="myApp" ng-controller="loginCtrl">
+    <form ng-submit="submit()">
+      <label><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" ng-model="login.username" required>
 
-            <label><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+      <label><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" ng-model="login.password" required>
 
-            <button type="submit">Login</button>
-        </div>
-    </main>
+      <button type="submit">Login</button>
+    </form>
+  </main>
 </body>
 </html>

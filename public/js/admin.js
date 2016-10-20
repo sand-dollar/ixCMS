@@ -1,86 +1,103 @@
-var app = angular.module('myApp', []);
-app.controller('settingsCtrl', function ($scope, $http) {
+let app = angular.module('myApp', []);
+
+app.controller('loginCtrl', function($scope, $http, $window) {
+  $scope.login = {};
+
+  $scope.submit = function() {
+    $http.post('/authenticate', {username: $scope.login.username, password: $scope.login.password})
+      .then(function(result) {
+        console.log('login success');
+        // $window.location.pathname = '/admin/menu/overview';
+      }, function(error) {
+        console.log(error);
+      });
+  };
+});
+
+app.controller('settingsCtrl', function($scope, $http) {
   $scope.settings = {};
 
   $http.get('/admin/settings')
-    .then(function (result) {
+    .then(function(result) {
       $scope.settings = result.data;
-    }, function (error) {
+    }, function(error) {
       console.log(error);
     });
 
-  $scope.saveSettings = function () {
+  $scope.saveSettings = function() {
     $http.post('/admin/settings', $scope.settings)
-      .then(function (result) {
+      .then(function(result) {
         // show "settings saved"
-      }, function (error) {
+      }, function(error) {
         console.log(error);
       });
-  }
+  };
 });
 
-app.controller('overviewCtrl', function ($scope, $http) {
-    $http.get('/admin/overview')
-    .then(function (result) {
+app.controller('overviewCtrl', function($scope, $http) {
+  $http.get('/admin/overview')
+    .then(function(result) {
       $scope.overview = result.data;
       console.log($scope.overview);
-    }, function (error) {
+    }, function(error) {
       console.log(error);
     });
 });
 
-app.controller('commentsCtrl', function ($scope, $http) {
+app.controller('commentsCtrl', function($scope, $http) {
 });
 
-app.controller('postsCtrl', function ($scope, $http) {
+app.controller('postsCtrl', function($scope, $http) {
   $http.get('/admin/posts')
-    .then(function (result) {
+    .then(function(result) {
       $scope.posts = result.data;
-    }, function (error) {
+    }, function(error) {
       console.log(error);
     });
-  
-  $scope.deletePost = function (id) {
+
+  $scope.deletePost = function(id) {
     // TODO show "really" dialog HERE
     $http.post('/admin/editor/posts/delete/' + id)
-      .then(function (result) {
+      .then(function(result) {
         console.log('post deleted');
         // Remove one element of array based on 'id' index.
-        $scope.posts.splice($scope.posts.findIndex((element, id) => {return element._id === id;}), 1);
-    })
+        $scope.posts.splice($scope.posts.findIndex((element, id) => {
+          return element._id === id;
+        }), 1);
+      });
   };
-
 });
 
-app.controller('pagesCtrl', function ($scope, $http) {
+app.controller('pagesCtrl', function($scope, $http) {
   $http.get('/admin/pages')
-    .then(function (result) {
+    .then(function(result) {
       $scope.pages = result.data;
-    }, function (error) {
+    }, function(error) {
       console.log(error);
     });
-  
-  
-  
-  $scope.deletePage = function (id) {
+
+
+
+  $scope.deletePage = function(id) {
     // TODO show "really" dialog HERE
     $http.post('/admin/editor/pages/delete/' + id)
-      .then(function (result) {
+      .then(function(result) {
         console.log('page deleted');
         // Remove one element of array based on 'id' index.
-        $scope.pages.splice($scope.pages.findIndex((element, id) => {return element._id === id;}), 1);
-    })
-  }
-
+        $scope.pages.splice($scope.pages.findIndex((element, id) => {
+          return element._id === id;
+        }), 1);
+      });
+  };
 });
 
-app.controller('editorCtrl', function ($scope, $http, $window) {
-  var simplemde = new SimpleMDE({  // BUG? We load JS files in a wrong order (simpleMDE at the end)
-    element: document.getElementById("editorText"),
+app.controller('editorCtrl', function($scope, $http, $window) {
+  let simplemde = new SimpleMDE({  // BUG? We load JS files in a wrong order (simpleMDE at the end)
+    element: document.getElementById('editorText'),
     status: false,
     toolbar: false,
     autoDownloadFontAwesome: false,  // FontAwesome is used for icons in toolbar
-    spellChecker: false
+    spellChecker: false,
   });
 
   $scope.editor = {};
@@ -92,27 +109,25 @@ app.controller('editorCtrl', function ($scope, $http, $window) {
 
 
   $http.get('/admin/' + $scope.collection + '/' + $scope.editor._id)
-    .then(function (result) {
+    .then(function(result) {
       Object.assign($scope.editor, result.data);
       simplemde.value($scope.editor.text);
-    }, function (error) {
+    }, function(error) {
       console.log(error);
     });
 
-  
-  $scope.docSave = function () {
+
+  $scope.docSave = function() {
     $scope.editor.text = simplemde.value();
     $http.post('/admin/editor/' + $scope.collection + '/save', $scope.editor)
-      .then(function (result) {
+      .then(function(result) {
         console.log('saved');
-      }, function (error) {
+      }, function(error) {
         console.log(error);
       });
-  }
+  };
 
-  $scope.docExit = function () {
+  $scope.docExit = function() {
     $window.location.replace('/admin/menu/' + $scope.collection);
-  }
-
-
+  };
 });
