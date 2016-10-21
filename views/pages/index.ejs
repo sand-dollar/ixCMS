@@ -7,7 +7,7 @@
         <% if (posts.length) { %>
             <ul>
                 <% posts.forEach(function(post){ %>
-                    <li><%= post.title %></li>
+                    <li><a href="/posts/<%= post.url %>"><%= post.title %></a></li>
                 <% }) %>
             </ul>
         <% } %>

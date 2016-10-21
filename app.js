@@ -24,73 +24,127 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.use('/admin', admin);
 
-app.get('/', (req, res) => {
-  MongoClient.connect(config.databaseUrl, function(error, db) {
-    if (error) {
-      console.log('Unable to connect to the mongoDB server. Error:', error);
-    } else {
-      console.log('Connection established to', config.databaseUrl);
 
-      // Get the documents collection
-      let collection = db.collection('posts');
-
-      // We have a cursor now with our find criteria
-      let cursor = collection.find({title: 'modulus'});
-
-      // We need to sort by age descending
-      cursor.sort({time: -1});
-
-      // Limit to max 10 records
-      cursor.limit(10);
-
-      // Skip specified records. 0 for skipping 0 records.
-      cursor.skip(0);
-
-      // Lets iterate on the result
-      cursor.each(function(error, doc) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Fetched:', doc);
-        }
-      });
-    }
+/**
+ * Helper function to get list of all 'pages' from the database as an array.
+ */
+function getMenu(db) {
+  return new Promise((resolve, reject) => {
+    db.collection('pages').find({}, {title: true, url: true}).toArray((error, result) => {
+      if (error) {
+        reject(new Error(error));
+      } else {
+        resolve(result);
+      }
+    });
   });
+}
 
-  res.render('pages/index', {
-    posts: [{
-      title: 'post1 title',
-      abstract: 'sample abstract',
-      time: '13:00 1.1.2016',
-      url: '/pages/xxx',
-      tags: ['tag1', 'tag2', 'tag3'],
-    }, {
-      title: 'post2 title',
-      abstract: 'sample abstract',
-      time: '13:00 1.1.2016',
-      url: '/pages/xxx',
-      tags: ['tag1', 'tag2', 'tag3'],
-    }, {
-      title: 'post3 title',
-      abstract: 'sample abstract',
-      time: '13:00 1.1.2016',
-      url: '/pages/xxx',
-      tags: ['tag1', 'tag2', 'tag3'],
-    }],
+/**
+ * Helper function to get list of all posts from the database as an array.
+ */
+function getPostList(db) {
+  return new Promise((resolve, reject) => {
+    db.collection('posts').find({}, {text: false}).toArray((error, result) => {
+      if (error) {
+        reject(new Error(error));
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
+/**
+ * Get page or post.
+ */
+function getArticle(collection, url) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(config.databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        Promise.all([
+          db.collection(collection).findOne({url: url}),
+          getMenu(db),
+        ])
+          .then(([article, menu]) => {
+            db.close();
+            article.menu = menu;
+            resolve(article);
+          })
+          .catch((err) => {
+            // Receives first rejection among the Promises
+            db.close();
+            reject(new Error(err));
+          });
+      }
+    });
+  });
+}
+
+/**
+ * Get list of posts
+ */
+function getIndexPage() {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(config.databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+        reject(new Error(error));
+      } else {
+        Promise.all([
+          getPostList(db),
+          getMenu(db),
+        ])
+          .then(([posts, menu]) => {
+            db.close();
+            resolve({posts, menu});
+          })
+          .catch((err) => {
+            // Receives first rejection among the Promises
+            db.close();
+            reject(new Error(err));
+          });
+      }
+    });
+  });
+}
+
+/**
+ * Render index page (list of all posts).
+ */
+app.get('/', (req, res) => {
+  getIndexPage().then((result) => {
+    res.render('pages/index', result);
+  }, (error) => {
+    console.log(error);
+    res.sendStatus(400);
   });
 });
 
-// REMOVE this route. This is replaced with /page/:page
-// Pokud budeme chtit vynechat angular pro navstevnika, budeme potrebovat dalsi route s template.
-app.get('/about', (req, res) => {
-  res.render('pages/page', {
-    title: 'Title',
-    text: 'sample text',
-    abstract: 'sample abstract',
-    time: '13:00 1.1.2016',
-    allowComments: true,
-    tags: ['tag1, tag2, tag3'],
-    status: 'draft',
+/**
+ * Render requested page.
+ */
+app.get('/pages/:page', (req, res) => {
+  getArticle('pages', req.params.page).then((result) => {
+    res.render('pages/page', result);
+  }, (error) => {
+    console.log(error);
+    res.sendStatus(400);
+  });
+});
+
+/**
+ * Render requested post.
+ */
+app.get('/posts/:post', (req, res) => {
+  getArticle('posts', req.params.post).then((result) => {
+    res.render('pages/page', result);
+  }, (error) => {
+    console.log(error);
+    res.sendStatus(400);
   });
 });
 
@@ -101,6 +155,9 @@ app.get('/login', (req, res) => {
   res.render('admin/pages/login');
 });
 
+/**
+ * Authenticate (login) the user so the user can enter the admin section.
+ */
 app.post('/authenticate', (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -112,17 +169,13 @@ app.post('/authenticate', (req, res) => {
   }
 });
 
+/**
+ * Logout the user.
+ */
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.redirect('/login');
 });
-
-// must be the last route
-// TODO render a helpful page here.
-/* app.get('*', (req, res) => {
-  res.status(404).send({url: req.url});
-  return;
-});*/
 
 app.listen(config.appPort, () => {
   console.log('ixCMS listening on port 3000!');
