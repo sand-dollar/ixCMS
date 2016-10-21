@@ -7,9 +7,11 @@ app.controller('loginCtrl', function($scope, $http, $window) {
   $scope.submit = function() {
     $http.post('/authenticate', {username: $scope.login.username, password: $scope.login.password})
       .then(function(result) {
+        $scope.loginFailed = false;
         $window.location.pathname = '/admin/menu/overview';
       }, function(error) {
         console.log(error);
+        $scope.loginFailed = true;
       });
   };
 });

@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<% include ../partials/head %>
+<head>
+    <meta charset="UTF-8">
+    <title>ixCMS login</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/admin.js"></script>
+</head>
 <body class="container">
   <main ng-app="myApp" ng-controller="loginCtrl">
-    <form ng-submit="submit()">
-      <label><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="username" ng-model="login.username" required>
-
-      <label><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="password" ng-model="login.password" required>
-
-      <button type="submit">Login</button>
-    </form>
+    <div class="login-page">
+      <div class="form">
+        <form name="loginForm" class="login-form" ng-submit="submit()">
+          <input type="text" placeholder="e-mail" ng-model="login.username" required />
+          <input type="password" placeholder="password" ng-model="login.password" required />
+          <button type="submit" ng-disabled="loginForm.$invalid">login</button>
+          <p class="message" ng-show="loginFailed">Login failed</p>
+        </form>
+      </div>
+    </div>
   </main>
 </body>
 </html>
