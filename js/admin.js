@@ -91,7 +91,7 @@ function getOverview() {
           db.collection('settings').findOne({_id: config.settingsId}, {siteName: true}),
         ])
           .then(([pageCount, postCount, siteName]) => {
-            resolve({pageCount, postCount, siteName});
+            resolve({pageCount, postCount, siteName: siteName.siteName});
           })
           .catch((err) => {
             // Receives first rejection among the Promises

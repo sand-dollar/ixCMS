@@ -16,6 +16,11 @@ app.controller('loginCtrl', function($scope, $http, $window) {
   };
 });
 
+app.controller('headerCtrl', function($scope, $window) {
+  let pathname = $window.location.pathname;
+  $scope.activeMenu = pathname.substr(pathname.lastIndexOf('/') + 1);
+});
+
 app.controller('settingsCtrl', function($scope, $http) {
   $scope.settings = {};
 

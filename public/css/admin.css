@@ -1,0 +1,54 @@
+body, html {
+  all: initial;
+  height: 100%;
+  display: block;
+}
+
+html {
+  background-color: #DDD;
+}
+
+body {
+  background-color: #FFF;
+  margin: 0 auto 0 auto;
+  max-width: 1024px;
+}
+
+#menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+#menu li {
+    float: left;
+    border-right:1px solid #bbb;
+}
+
+#menu li:last-child {
+    border-right: none;
+}
+
+#menu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+#menu li a:hover:not(.active) {
+    background-color: #111;
+}
+
+#menu .active {
+    background-color: #4CAF50;
+}
+
+main {
+  background-color: #FFF;
+  padding: 50px 50px 100px 80px;
+}
+
