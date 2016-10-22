@@ -3,13 +3,13 @@
 <% include ../partials/head %>
 <body ng-app="myApp">
   <% include ../partials/header %>
+  <div id="toolbar">
+    <ul>
+      <li><a href="/admin/editor/posts" class="color1"><i class="fa fa-plus-circle"></i>Create a new post</a></li>
+    </ul>
+  </div>
   <main ng-controller="postsCtrl">
   <h1>Posts</h1>
-
-
-  <div>
-    <a href="/admin/editor/posts"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add a new post</a>
-  </div>
 
   <div>
     <ul>

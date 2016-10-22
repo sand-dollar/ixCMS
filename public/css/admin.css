@@ -16,6 +16,12 @@ body {
   box-shadow: 0px 0px 20px #999;
 }
 
+main {
+  background-color: #FFF;
+  flex: 1 0 auto;
+  padding: 50px 50px 100px 80px;
+}
+
 #menu {
     list-style-type: none;
     margin: 0;
@@ -26,7 +32,7 @@ body {
 
 #menu li {
     float: left;
-    border-right:1px solid #bbb;
+    border-right: 1px solid #bbb;
 }
 
 #menu li:last-child {
@@ -49,10 +55,48 @@ body {
     background-color: #750600;
 }
 
-main {
-  background-color: #FFF;
-  flex: 1 0 auto;
-  padding: 50px 50px 100px 80px;
+#menu .fa, #toolbar .fa {
+    margin-right: 0.7em;
+}
+
+#toolbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #505050;
+    border-top: 1px solid #bbb;
+}
+
+#toolbar ul li {
+    float: left;
+    border-right:1px solid #bbb;
+}
+
+#toolbar ul li a {
+    display: block;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    padding: 2px 7px;
+    margin: 5px 6px;
+    border-radius: 0.8em;
+}
+
+#toolbar ul li a:hover {
+    background-color: #fff;
+}
+
+#toolbar ul li .color1 {
+    background-color: #d7ffed;
+}
+
+#toolbar ul li .color2 {
+    background-color: #d7e9ff;
+}
+
+#toolbar ul li .color3 {
+    background-color: #ffd9d7;
 }
 
 .overview-table {
