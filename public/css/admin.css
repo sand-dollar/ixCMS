@@ -64,39 +64,41 @@ main {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #505050;
+    background-color: #e7e7e7;
     border-top: 1px solid #bbb;
 }
 
 #toolbar ul li {
     float: left;
-    border-right:1px solid #bbb;
+    border-right: 1px solid #bbb;
+}
+
+#toolbar ul li:last-child {
+    border-right: none;
 }
 
 #toolbar ul li a {
     display: block;
-    color: black;
+    color: white;
     text-align: center;
     text-decoration: none;
-    padding: 2px 7px;
-    margin: 5px 6px;
-    border-radius: 0.8em;
+    padding: 6px 9px;
 }
 
 #toolbar ul li a:hover {
-    background-color: #fff;
+    background-color: #111;
 }
 
 #toolbar ul li .color1 {
-    background-color: #d7ffed;
+    background-color: #4CAF50;
 }
 
 #toolbar ul li .color2 {
-    background-color: #d7e9ff;
+    background-color: #008CBA;
 }
 
 #toolbar ul li .color3 {
-    background-color: #ffd9d7;
+    background-color: #f44336;
 }
 
 .overview-table {

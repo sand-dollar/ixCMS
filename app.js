@@ -174,7 +174,7 @@ app.post('/authenticate', (req, res) => {
  */
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.redirect('/login');
+  res.redirect('/');
 });
 
 app.listen(config.appPort, () => {

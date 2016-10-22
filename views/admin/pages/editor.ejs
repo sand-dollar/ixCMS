@@ -7,12 +7,14 @@
   <div id="toolbar">
     <ul>
       <li><a href ng-click="docSave()" class="color1"><i class="fa fa-save"></i>Save document</a></li>
-      <li><a href class="color2"><i class="fa fa-eye"></i>Show all fields</a></li>
+      <li><a href class="color2"><i class="fa fa-wpforms"></i>Show all fields</a></li>
       <li><a href ng-click="docExit()" class="color3"><i class="fa fa-chevron-right"></i>Exit without saving</a></li>
     </ul>
   </div>
   <main>
   <h1>Editor</h1>
+
+    "show all fields" shows "type = post / page"
   
     <div class="form-group">
       <input class="form-control" id="editorTitle" placeholder="Page title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();">
