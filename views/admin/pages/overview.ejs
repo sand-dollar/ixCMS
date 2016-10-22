@@ -5,11 +5,46 @@
   <% include ../partials/header %>
   <main ng-controller="overviewCtrl">
 
-  Overview and starting page (show number of unverified posts etc)
+    <h2>Site overview</h2>
+    <table class="overview-table">
+      <tr>
+        <td>Site name</td>
+        <td>{{overview.siteName}}</td>
+      </tr>
+      <tr>
+        <td>Number of pages</td>
+        <td>{{overview.pageCount}}</td>
+      </tr>
+      <tr>
+        <td>Number of pages</td>
+        <td>{{overview.pageCount}}</td>
+      </tr>
+      <tr>
+        <td>Unverified comments</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>Last post</td>
+        <td>- days ago</td>
+      </tr>
+    </table>
 
-  <p>Site name: {{overview.siteName}}</p>
-  <p>Number of pages: {{overview.pageCount}}</p>
-  <p>Number of posts: {{overview.postCount}}</p>
+    <h2>Visits</h2>
+    <table class="overview-table">
+      <tr>
+        <td>Last login</td>
+        <td>HH:MM DD.MM.YYYY [IP]</td>
+      </tr>
+      <tr>
+        <td>Unique visitors today</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>Pages shown today</td>
+        <td>-</td>
+      </tr>
+      <tr>
+    </table>
    
   </main>
 </body>

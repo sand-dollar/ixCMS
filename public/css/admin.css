@@ -1,7 +1,6 @@
 body, html {
   all: initial;
   height: 100%;
-  display: block;
 }
 
 html {
@@ -12,6 +11,9 @@ body {
   background-color: #FFF;
   margin: 0 auto 0 auto;
   max-width: 1024px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 20px #999;
 }
 
 #menu {
@@ -44,11 +46,31 @@ body {
 }
 
 #menu .active {
-    background-color: #4CAF50;
+    background-color: #750600;
 }
 
 main {
   background-color: #FFF;
+  flex: 1 0 auto;
   padding: 50px 50px 100px 80px;
 }
+
+.overview-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.overview-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.overview-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.overview-table tr:hover {
+    background-color: #ddd;
+}
+
 
