@@ -11,7 +11,8 @@
   <main ng-controller="pagesCtrl">
   <h1>Pages</h1>
 
-  <div>
+  TODO: angular - filter by search in toolbox menu (align right)!
+  <div class="box-view">
     <ul>
       <li ng-repeat="page in pages"><a ng-href="/admin/editor/pages/{{page._id}}">{{page.title}}</a>&nbsp;[<a href="#" ng-click="deletePage(page._id)">delete</a>]</li>
     </ul>

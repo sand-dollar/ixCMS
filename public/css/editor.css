@@ -1,0 +1,5 @@
+/* This CSS overrides SimpleMDE styles */
+
+.CodeMirror {
+  border: none;
+}

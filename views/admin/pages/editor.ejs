@@ -12,19 +12,20 @@
     </ul>
   </div>
   <main>
-  <h1>Editor</h1>
-
-    "show all fields" shows "type = post / page"
   
-    <div class="form-group">
-      <input class="form-control" id="editorTitle" placeholder="Page title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();">
-      <input class="form-control" id="editorUrl" placeholder="Page URL" ng-model="editor.url">    
-      <textarea class="form-control" id="editorText"></textarea>
+    <div class="editor-hidden">
+      <input id="editorUrl" placeholder="Page URL" ng-model="editor.url">    
+    </div>
+
+    <div class="editor">
+      <input id="editorTitle" placeholder="Page title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();">
+      <textarea id="editorText" placeholder="Start your text here."></textarea>
     </div>
 
   </main>
   </div>
-	<link rel="stylesheet" href="/js/simplemde.min.css">
+	<link rel="stylesheet" href="/css/simplemde.min.css">
+	<link rel="stylesheet" href="/css/editor.css">
 	<script src="/js/simplemde.min.js"></script>
 </body>
 </html>

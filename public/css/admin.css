@@ -32,7 +32,7 @@ main {
 
 #menu li {
     float: left;
-    border-right: 1px solid #bbb;
+    border-right: 1px solid #e7e7e7;
 }
 
 #menu li:last-child {
@@ -65,12 +65,12 @@ main {
     padding: 0;
     overflow: hidden;
     background-color: #e7e7e7;
-    border-top: 1px solid #bbb;
+    border-top: 1px solid #e7e7e7;
 }
 
 #toolbar ul li {
     float: left;
-    border-right: 1px solid #bbb;
+    border-right: 1px solid #e7e7e7;
 }
 
 #toolbar ul li:last-child {
@@ -119,4 +119,49 @@ main {
     background-color: #ddd;
 }
 
+.editor input, .editor input:focus {
+    border: none;
+    outline: none;
+    font-size: 2em;
+    border-left: 2px solid #999;
+    margin-left: -15px;
+    padding-left: 14px;
+    margin-bottom: 20px;
+    width: 100%;
+}
 
+
+.editor-hidden {
+    padding: 20px;
+    margin: 0 0 50px 0;
+    border: 1px solid #bbb;
+    /*display: none;*/
+}
+
+
+
+.box-view {
+    width: 450px;
+}
+.box-view ul {
+    padding: 0; 
+    margin: 0;
+    list-style-type: none;
+}
+.box-view ul li {
+    width: 150px;
+    height: 100px;
+    float: left;
+    border-radius: 20px;
+    border: 1px solid #333;
+    margin: 10px;
+    padding: 10px;
+}
+
+.box-view ul li:hover {
+  background-color: gray;
+}
+
+.box-view ul a {
+  color: red;
+}
