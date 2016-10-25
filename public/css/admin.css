@@ -130,27 +130,30 @@ main {
     width: 100%;
 }
 
-.editor-hidden {
+.nice-form {
     padding: 20px 50px 20px 20px;
     margin: 15px 10px 50px 10px;
     border-radius: 20px;
     border: 8px solid #008CBA;
     position: relative;
+    overflow: auto; /* The clearfix Hack */
 }
 
-.editor-hidden .field {
+.nice-form .field {
     padding: 4px;
     margin: 1px;
     display: flex;
 }
 
-.editor-hidden .field label {
+.nice-form .field label {
     display: inline-block;
     width: 120px;
     margin-left: 5px;
 }
 
-.editor-hidden .field input[type=text] {
+.nice-form .field input[type=text],
+.nice-form .field input[type=email],
+.nice-form .field input[type=password] {
     display: inline-block;
     flex: 1;
     border: none;
@@ -159,8 +162,7 @@ main {
     resize: none;
 }
 
-.editor-hidden .field .textareadiv,
-.editor-hidden .field .textareadiv.active {
+.nice-form .field .textareadiv {
     display: inline-block;
     flex: 1;
     border:none;
@@ -168,17 +170,17 @@ main {
     outline: none;
 }
 
-.editor-hidden input[type=radio],
-.editor-hidden input[type=checkbox],
-.editor-hidden input[type=date] {
+.nice-form input[type=radio],
+.nice-form input[type=checkbox],
+.nice-form input[type=date] {
     display: inline-block;
     border: none;
     outline: none;
     resize: none;
 }
 
-.editor-hidden input[type=radio].nice-button,
-.editor-hidden input[type=checkbox].nice-button {
+.nice-form input[type=radio].nice-button,
+.nice-form input[type=checkbox].nice-button {
     border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
@@ -189,8 +191,8 @@ main {
     width: 1px;
 }
     
-.editor-hidden input[type=radio].nice-button ~ label:before,
-.editor-hidden input[type=checkbox].nice-button ~ label:before {
+.nice-form input[type=radio].nice-button ~ label:before,
+.nice-form input[type=checkbox].nice-button ~ label:before {
     font-family: FontAwesome;
     display: inline-block;
     content: "\f1db";
@@ -200,39 +202,66 @@ main {
     width: 1.4em;
 }
 
-.editor-hidden input[type=radio].nice-button:checked ~ label:before,
-.editor-hidden input[type=checkbox].nice-button:checked ~ label:before  {
+.nice-form input[type=radio].nice-button:checked ~ label:before,
+.nice-form input[type=checkbox].nice-button:checked ~ label:before  {
     content: "\f00c";
     font-size: 1.2em;
     color: darkgreen;
     letter-spacing: 5px;
 }
 
-.editor-hidden input[type=checkbox].nice-button ~ label:before {        
+.nice-form input[type=checkbox].nice-button ~ label:before {        
     content: "\f096";
 }
 
-.editor-hidden input[type=checkbox].nice-button:checked ~ label:before {
+.nice-form input[type=checkbox].nice-button:checked ~ label:before {
     content: "\f046";        
     color: darkgreen;
 }
 
-.editor-hidden input[type=radio].nice-button:focus ~ label:before,
-.editor-hidden input[type=checkbox].nice-button:focus ~ label:before,
-.editor-hidden input[type=radio].nice-button:focus ~ label,
-.editor-hidden input[type=checkbox].nice-button:focus ~ label
+.nice-form input[type=radio].nice-button:focus ~ label:before,
+.nice-form input[type=checkbox].nice-button:focus ~ label:before,
+.nice-form input[type=radio].nice-button:focus ~ label,
+.nice-form input[type=checkbox].nice-button:focus ~ label
 {                
     color: green;
 }
 
-.editor-hidden .close {
+.nice-form .field-button {
+    padding: 4px;
+    margin-top: 20px;
+    display: flex;
+    float: right;
+}
+
+.nice-form .field-button button {
+    background-color: white;
+    border: 2px solid #008CBA;
+    color: black;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.2s; /* Safari */
+    transition-duration: 0.2s;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.nice-form .field-button button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+.nice-form .close {
     position: absolute;
     top: 7px;
     right: 9px;
     cursor: pointer;
     color: #008CBA;
 }
-
 
 .box-view {
     width: 450px;
