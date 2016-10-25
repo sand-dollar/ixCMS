@@ -130,12 +130,9 @@ main {
     width: 100%;
 }
 
-
 .editor-hidden {
     padding: 20px 50px 20px 20px;
     margin: 15px 10px 50px 10px;
-    /*display: none;*/
-    /*background-color: #008CBA;*/
     border-radius: 20px;
     border: 8px solid #008CBA;
     position: relative;
@@ -153,14 +150,22 @@ main {
     margin-left: 5px;
 }
 
-.editor-hidden .field input[type=text],
-.editor-hidden .field textarea {
+.editor-hidden .field input[type=text] {
     display: inline-block;
     flex: 1;
     border: none;
     border-bottom: 1px dashed #008CBA;
     outline: none;
     resize: none;
+}
+
+.editor-hidden .field .textareadiv,
+.editor-hidden .field .textareadiv.active {
+    display: inline-block;
+    flex: 1;
+    border:none;
+    border-bottom: 1px dashed #008CBA;
+    outline: none;
 }
 
 .editor-hidden input[type=radio],

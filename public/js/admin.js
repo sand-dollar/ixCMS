@@ -1,24 +1,5 @@
 let app = angular.module('myApp', []);
 
-// Auto-resizable (elastic) textarea
-app.directive('elastic', [
-  '$timeout',
-  function($timeout) {
-    return {
-      restrict: 'A',
-      link: function($scope, element) {
-        $scope.initialHeight = $scope.initialHeight || element[0].style.height;
-        let resize = function() {
-          element[0].style.height = $scope.initialHeight;
-          element[0].style.height = '' + element[0].scrollHeight + 'px';
-        };
-        element.on('input change', resize);
-        $timeout(resize, 0);
-      },
-    };
-  },
-]);
-
 app.controller('loginCtrl', function($scope, $http, $window) {
   $scope.login = {};
 
@@ -125,12 +106,12 @@ app.controller('editorCtrl', function($scope, $http, $window) {
   });
 
   $scope.editor = {};
-
+  $scope.editor.status = 'published';
+  $scope.editor.allowComments = true;
 
   let location = $window.location.pathname.split('/');
   $scope.editor._id = location[location.length - 1];
   $scope.collection = location[location.length - 2];
-
 
   $http.get('/admin/' + $scope.collection + '/' + $scope.editor._id)
     .then(function(result) {
