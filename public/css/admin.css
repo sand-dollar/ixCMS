@@ -122,32 +122,123 @@ main {
 .editor input, .editor input:focus {
     border: none;
     outline: none;
-    font-size: 2em;
-    border-left: 2px solid #999;
+    font-size: 3em;
+    border-left: 15px solid #999;
     margin-left: -15px;
-    padding-left: 14px;
-    margin-bottom: 20px;
+    padding-left: 13px;
+    margin-bottom: 30px;
     width: 100%;
 }
 
 
 .editor-hidden {
-    padding: 20px;
-    margin: 0 0 50px 0;
-    border: 1px solid #bbb;
+    padding: 20px 50px 20px 20px;
+    margin: 15px 10px 50px 10px;
     /*display: none;*/
+    /*background-color: #008CBA;*/
+    border-radius: 20px;
+    border: 8px solid #008CBA;
+    position: relative;
 }
 
+.editor-hidden .field {
+    padding: 4px;
+    margin: 1px;
+    display: flex;
+}
+
+.editor-hidden .field label {
+    display: inline-block;
+    width: 120px;
+    margin-left: 5px;
+}
+
+.editor-hidden .field input[type=text],
+.editor-hidden .field textarea {
+    display: inline-block;
+    flex: 1;
+    border: none;
+    border-bottom: 1px dashed #008CBA;
+    outline: none;
+    resize: none;
+}
+
+.editor-hidden input[type=radio],
+.editor-hidden input[type=checkbox],
+.editor-hidden input[type=date] {
+    display: inline-block;
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+.editor-hidden input[type=radio].nice-button,
+.editor-hidden input[type=checkbox].nice-button {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+    
+.editor-hidden input[type=radio].nice-button ~ label:before,
+.editor-hidden input[type=checkbox].nice-button ~ label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f1db";
+    letter-spacing: 10px;
+    font-size: 1.2em;
+    color: #535353;
+    width: 1.4em;
+}
+
+.editor-hidden input[type=radio].nice-button:checked ~ label:before,
+.editor-hidden input[type=checkbox].nice-button:checked ~ label:before  {
+    content: "\f00c";
+    font-size: 1.2em;
+    color: darkgreen;
+    letter-spacing: 5px;
+}
+
+.editor-hidden input[type=checkbox].nice-button ~ label:before {        
+    content: "\f096";
+}
+
+.editor-hidden input[type=checkbox].nice-button:checked ~ label:before {
+    content: "\f046";        
+    color: darkgreen;
+}
+
+.editor-hidden input[type=radio].nice-button:focus ~ label:before,
+.editor-hidden input[type=checkbox].nice-button:focus ~ label:before,
+.editor-hidden input[type=radio].nice-button:focus ~ label,
+.editor-hidden input[type=checkbox].nice-button:focus ~ label
+{                
+    color: green;
+}
+
+.editor-hidden .close {
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    cursor: pointer;
+    color: #008CBA;
+}
 
 
 .box-view {
     width: 450px;
 }
+
 .box-view ul {
     padding: 0; 
     margin: 0;
     list-style-type: none;
 }
+
 .box-view ul li {
     width: 150px;
     height: 100px;

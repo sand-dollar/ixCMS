@@ -7,19 +7,52 @@
   <div id="toolbar">
     <ul>
       <li><a href ng-click="docSave()" class="color1"><i class="fa fa-save"></i>Save document</a></li>
-      <li><a href class="color2"><i class="fa fa-wpforms"></i>Show all fields</a></li>
+      <li><a href ng-click="showEditor = !showEditor;" class="color2"><i class="fa fa-wpforms"></i>Show extra fields</a></li>
       <li><a href ng-click="docExit()" class="color3"><i class="fa fa-chevron-right"></i>Exit without saving</a></li>
     </ul>
   </div>
-  <main>
-  
-    <div class="editor-hidden">
-      <input id="editorUrl" placeholder="Page URL" ng-model="editor.url">    
+  <form class="editor-hidden" ng-show="showEditor">
+    <div class="field">
+        <label for="url">Article URL:</label>
+        <input name="url" type="text" ng-model="editor.url">
     </div>
+    <div class="field" ng-show="collection === 'posts'">
+        <label for="tags">Tags:</label>
+        <input type="text" name="tags" ng-model="editor.tags">
+    </div>
+    <div class="field" ng-show="collection === 'posts'">
+        <label for="date">Date:</label>
+        <input type="date" name="date" ng-model="editor.date">
+    </div>
+    <div class="field" ng-show="collection === 'posts'">
+        <label for="abstract">Abstract:</label>
+        <textarea elastic type="text" name="abstract" ng-model="editor.abstract"></textarea>
+    </div>
+    <div class="field" ng-show="collection === 'posts'">
+        <label for="status">Status:</label>
+        <span>
+            <input type="radio"  class="nice-button" name="status" value="draft" id="draft" ng-model="editor.status" checked>
+            <label for="draft">Draft</label>
+        </span>
+        <span>
+            <input type="radio" class="nice-button" name="status" value="published" id="published" ng-model="editor.status">
+            <label for="published">Published</label>
+        </span>
+    </div>
+    <div class="field" ng-show="collection === 'posts'">
+        <label for="comments">Comments:</label>
+        <span>
+            <input type="checkbox" class="nice-button" name="comments" id="comments" ng-model="editor.allowComments" checked>
+            <label for="comments">Allow</label>
+        </span>
+    </div>
+    <span class="close"><i class="fa fa-times" aria-hidden="true" ng-click="showEditor = false;"></i></span>
+  </form>
+  <main>
 
     <div class="editor">
-      <input id="editorTitle" placeholder="Page title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();">
-      <textarea id="editorText" placeholder="Start your text here."></textarea>
+      <input id="editorTitle" placeholder="Title" ng-model="editor.title" ng-change="editor.url = editor.title.split(' ').join('-').toLowerCase();" autofocus>
+      <textarea id="editorText" placeholder="Start your text here..."></textarea>
     </div>
 
   </main>
