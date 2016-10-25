@@ -130,11 +130,14 @@ main {
     width: 100%;
 }
 
+.editor-border {
+    border: 8px solid #008CBA;
+}
+
 .nice-form {
     padding: 20px 50px 20px 20px;
     margin: 15px 10px 50px 10px;
     border-radius: 20px;
-    border: 8px solid #008CBA;
     position: relative;
     overflow: auto; /* The clearfix Hack */
 }
@@ -206,7 +209,7 @@ main {
 .nice-form input[type=checkbox].nice-button:checked ~ label:before  {
     content: "\f00c";
     font-size: 1.2em;
-    color: darkgreen;
+    color: #1e6f2c;
     letter-spacing: 5px;
 }
 
@@ -216,7 +219,7 @@ main {
 
 .nice-form input[type=checkbox].nice-button:checked ~ label:before {
     content: "\f046";        
-    color: darkgreen;
+    color: #1e6f2c;
 }
 
 .nice-form input[type=radio].nice-button:focus ~ label:before,
@@ -224,7 +227,7 @@ main {
 .nice-form input[type=radio].nice-button:focus ~ label,
 .nice-form input[type=checkbox].nice-button:focus ~ label
 {                
-    color: green;
+    color: #4CAF50;
 }
 
 .nice-form .field-button {
@@ -236,7 +239,7 @@ main {
 
 .nice-form .field-button button {
     background-color: white;
-    border: 2px solid #008CBA;
+    border: 2px solid #4CAF50;
     color: black;
     padding: 16px 32px;
     text-align: center;
@@ -251,7 +254,7 @@ main {
 }
 
 .nice-form .field-button button:hover {
-    background-color: #008CBA;
+    background-color: #4CAF50;
     color: white;
 }
 
