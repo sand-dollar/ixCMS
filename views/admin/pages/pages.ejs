@@ -6,15 +6,23 @@
   <div id="toolbar">
     <ul>
       <li><a href="/admin/editor/pages" class="color1"><i class="fa fa-plus-circle"></i>New page</a></li>
+      <li><a href="#" class="color2"><i class="fa fa-list-alt"></i>Edit menu</a></li>
+      <li class="search">
+        <label for="searchfilter"><i class="fa fa-search"></i></label>
+        <input ng-model="searchFilter" placeholder="Search" id="searchfilter">
+      </li>
     </ul>
   </div>
   <main ng-controller="pagesCtrl">
-  <h1>Pages</h1>
 
-  TODO: angular - filter by search in toolbox menu (align right)!
   <div class="box-view">
     <ul>
-      <li ng-repeat="page in pages"><a ng-href="/admin/editor/pages/{{page._id}}">{{page.title}}</a>&nbsp;[<a href="#" ng-click="deletePage(page._id)">delete</a>]</li>
+      <li ng-repeat="page in pages | filter:searchFilter">
+        <h2><a ng-href="/admin/editor/pages/{{page._id}}">{{page.title}}</a></h2>
+        <a href ng-click="deletePage(page._id)" class="close"><i class="fa fa-times" aria-hidden="true" ng-click="showEditor = false;"></i></a>
+        <hr />
+        <p>Page ID: {{page._id}}</p>
+      </li>
     </ul>
   </div>
 

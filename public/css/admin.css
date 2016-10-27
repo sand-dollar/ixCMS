@@ -89,6 +89,50 @@ main {
     background-color: #111;
 }
 
+#toolbar ul .search {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background-color: #ff6961;
+}
+
+#toolbar ul .search label {
+    font-size: inherit;
+    font-family: inherit;
+    color: white;
+    padding: 0px;
+    margin: 0px;
+    padding-left: 9px;
+    margin-right: -4px;
+}
+
+#toolbar ul .search input {
+    color: white;
+    margin: 0;
+    padding: 6px 9px 6px 0px;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+    background-color: inherit;
+    outline: none;
+}
+
+#toolbar ul .search ::-webkit-input-placeholder  {
+  color: white;
+}
+
+#toolbar ul .search :-moz-placeholder  {
+  color: white;
+}
+
+#toolbar ul .search ::-moz-placeholder {
+  color: white;
+}
+
+#toolbar ul .search :-ms-input-placeholder {
+  color: white;
+}
+
 #toolbar ul li .color1 {
     background-color: #4CAF50;
 }
@@ -258,16 +302,23 @@ main {
     color: white;
 }
 
-.nice-form .close {
+.close {
     position: absolute;
     top: 7px;
     right: 9px;
     cursor: pointer;
+}
+
+.nice-form .close {
     color: #008CBA;
 }
 
+.box-view .close {
+    color: #1e37b0;
+}
+
 .box-view {
-    width: 450px;
+    width: 100%;
 }
 
 .box-view ul {
@@ -277,19 +328,31 @@ main {
 }
 
 .box-view ul li {
-    width: 150px;
-    height: 100px;
-    float: left;
+    min-height: 3em;
     border-radius: 20px;
-    border: 1px solid #333;
+    border: 3px solid #1e37b0;
     margin: 10px;
     padding: 10px;
-}
-
-.box-view ul li:hover {
-  background-color: gray;
+    padding-bottom: 20px;
+    color: #999;
+    position: relative;
 }
 
 .box-view ul a {
-  color: red;
+  color: #1e37b0;
+  text-decoration: none;
+}
+
+.box-view ul a:hover {
+    color: #111;
+}
+
+.box-view ul li h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.box-view ul li p {
+    margin: 0;
+    padding: 0;
 }

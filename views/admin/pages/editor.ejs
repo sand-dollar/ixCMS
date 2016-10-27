@@ -14,19 +14,19 @@
   <form class="nice-form editor-border" ng-show="showEditor">
     <div class="field">
         <label for="url">Article URL:</label>
-        <input name="url" type="text" ng-model="editor.url">
+        <input id="url" type="text" ng-model="editor.url">
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="tags">Tags:</label>
-        <input type="text" name="tags" ng-model="editor.tags">
+        <input type="text" id="tags" ng-model="editor.tags">
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="date">Date:</label>
-        <input type="date" name="date" ng-model="editor.date">
+        <input type="date" id="date" ng-model="editor.date">
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="abstract">Abstract:</label>
-        <div class="textareadiv" contenteditable="true" ng-model="editor.abstract">{{ editor.abstract }}</div>
+        <div id="abstract" class="textareadiv" contenteditable="true" ng-model="editor.abstract">{{ editor.abstract }}</div>
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="status">Status:</label>
