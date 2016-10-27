@@ -6,17 +6,24 @@
   <div id="toolbar">
     <ul>
       <li><a href="/admin/editor/posts" class="color1"><i class="fa fa-plus-circle"></i>New post</a></li>
+      <li class="search">
+        <label for="searchfilter"><i class="fa fa-search"></i></label>
+        <input ng-model="searchFilter" placeholder="Search" id="searchfilter">
+      </li>
     </ul>
   </div>
-  <main ng-controller="postsCtrl">
-  <h1>Posts</h1>
 
-  <div>
+  <main ng-controller="postsCtrl">
+  <div class="box-view">
     <ul>
-      <li ng-repeat="post in posts"><a ng-href="/admin/editor/posts/{{post._id}}">{{post.title}}</a>&nbsp;[<a href="#" ng-click="deletePost(post._id)">delete</a>]</li>
+      <li ng-repeat="post in posts | filter:searchFilter">
+        <h2><a ng-href="/admin/editor/posts/{{post._id}}">{{post.title}}</a></h2>
+        <a href ng-click="deletePost(post._id)" class="close"><i class="fa fa-times" aria-hidden="true" ng-click="showEditor = false;"></i></a>
+        <hr />
+        <p>Post ID: {{post._id}}</p>
+      </li>
     </ul>
-  </div>
-    
+  </div>    
   </main>
 </body>
 </html>
