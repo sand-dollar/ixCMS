@@ -1,0 +1,79 @@
+body, html {
+  all: initial;
+  height: 100%;
+}
+
+
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+
+main {
+  flex: 1 0 auto;
+  padding: 50px 50px 100px 80px;
+	background-color: #aaa; /* TODO for texting only */
+  margin: 0 auto 0 auto;
+  width: 1024px;
+}
+
+a {
+	text-decoration: none;
+}
+
+.big-top {
+	background-image: url("/images/galaxy.jpg");
+  background-repeat: no-repeat;
+	background-position: center top;
+	color: white;
+  text-align: center;
+}
+
+.big-top .container {
+  margin: 0 auto 0 auto;
+  width: 1024px;
+	height: 400px;
+}
+
+.big-top nav {
+	text-align: right;
+	font-weight: 700;
+}
+
+.big-top nav ul li {
+	display: inline-block;
+}
+
+.big-top nav a {
+	color: #666;
+}
+
+.big-top nav a:hover {
+	color: #fff;
+}
+
+.big-top h1 {
+}
+
+.big-top .motto {
+	font-style: italic;
+}
+
+footer {
+  margin: 0 auto 0 auto;
+  width: 1024px;
+  padding: 50px 50px 100px 80px;
+	background-color: #ffa;
+}
+
+
+footer ul {
+	display: inline-block;
+}
+
+footer ul li {
+	display: inline;
+}
+

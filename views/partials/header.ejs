@@ -1,19 +1,10 @@
 <header>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-
-        <div class="navbar-header">
-            <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
-            EJS Is Fun
-        </div>
-
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <% menu.forEach(function(item){ %>
-                <li><a href="/pages/<%= item.url %>"><%= item.title %></a></li>
-            <% }) %>
-        </ul>
-      
-    </div>
+<nav role="navigation">
+    <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <% menu.forEach(function(item){ %>
+            <li><a href="/pages/<%= item.url %>"><%= item.title %></a></li>
+        <% }) %>
+    </ul>
 </nav>
 </header>
