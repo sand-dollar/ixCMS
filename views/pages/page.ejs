@@ -1,15 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <% include ../partials/head %>
-<body class="container">
-    <% include ../partials/header %>
-    <main>
-        <div class="jumbotron">
-            <h1><%= title %></h1>
-            <p><%= text %></p>
-        </div>
-    </main>
-
+<body class="<?php echo body_class(); ?>">
+<% include ../partials/slidey %>
+<div class="main-wrap">
+    <header id="top" style="background-image: url('/images/galaxy.jpg');">
+        <a id="logo" href="/">softwaremanagement.cz</a>
+        <% include ../partials/navigation %>
+    </header> 
+    <section class="content wrap">
+        <h1><%= title %></h1>
+        <%= text %>
+    </section>
     <% include ../partials/footer %>
+</div>
+<% include ../partials/analytics %>
 </body>
 </html>

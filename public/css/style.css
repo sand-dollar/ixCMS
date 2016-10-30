@@ -1,79 +1,566 @@
-body, html {
-  all: initial;
-  height: 100%;
+/**
+ *   Anchor, default reset
+ */
+
+* {
+	margin: 0;
+	padding: 0;
+	
+	-webkit-font-smoothing: antialiased;
+	
+	/* Don't count padding and borders towards widths */ 
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
-
-
+/**
+ *   Typographic reset
+ */
 body {
-  display: flex;
-  flex-direction: column;
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+h1, h2, h3, h4, h5, #logo, #top, .slidey b, .slidey label, .counter, input, textarea, button, .pagination {
+	font-family: 'Lora', 'Times New Roman', serif;
+	font-weight: 700;
+}
 
-main {
-  flex: 1 0 auto;
-  padding: 50px 50px 100px 80px;
-	background-color: #aaa; /* TODO for texting only */
-  margin: 0 auto 0 auto;
-  width: 1024px;
+pre, code, .mono {
+	font: 12px/19px "Anonymous Pro", Consolas, monospace;
+	padding: 0 2px;
+}
+
+p {
+	padding-bottom: 15px;
+}
+
+pre {
+	padding: 15px 20px;
+	margin-bottom: 20px;
+	
+	border-radius: 5px;
+	white-space: pre-wrap;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
 }
 
 a {
 	text-decoration: none;
 }
 
-.big-top {
-	background-image: url("/images/galaxy.jpg");
-  background-repeat: no-repeat;
-	background-position: center top;
-	color: white;
-  text-align: center;
+a img {
+	border: none;
 }
 
-.big-top .container {
-  margin: 0 auto 0 auto;
-  width: 1024px;
-	height: 400px;
+/**
+ *   Layout reset
+ */
+.wrap {
+	min-width: 280px;
+	max-width: 750px;
+	width: 60%;
+	
+	margin: 0 auto;
 }
 
-.big-top nav {
-	text-align: right;
-	font-weight: 700;
+/**
+ *   Default colours
+ */
+body {
+	color: #6e7886;
+}
+a, .items h1 a:hover {
+	color: #4075c3;
 }
 
-.big-top nav ul li {
-	display: inline-block;
+a:hover {
+	color: #1e4d92;
+}
+	
+pre, .hilite, mark {
+	background: #f9f6ea;
+	color: #8b7c65;
+	text-shadow: 0 1px 0 rgba(255,255,255,.2);
 }
 
-.big-top nav a {
-	color: #666;
+input, textarea {
+	color: #697281;
 }
 
-.big-top nav a:hover {
+::-webkit-input-placeholder {
+	color: #b2b9c5;
+}
+
+:-moz-placeholder, :placeholder {
+	color: #b2b9c5;
+}
+	
+.error, .success {
+	padding: 20px 30px;
+	margin-bottom: 30px;
+
+	background: #e25d47;
 	color: #fff;
+	
+	border-radius: 5px;
 }
 
-.big-top h1 {
+.success {
+	background: #88be33;
 }
 
-.big-top .motto {
+.error p, .success p {
+	float: none !important;
+	width: 100%;
+	padding: 0;
+	margin: 0 !important;
+}
+
+/**
+ *   Transitions and animations
+ */
+a, a img {
+	-webkit-transition: opacity .2s, color .2s;
+	-moz-transition: opacity .2s, color .2s;
+	transition: opacity .2s, color .2s;
+}
+
+
+/**
+ *
+ */
+
+h1 {
+	padding: 80px 0 40px;
+
+	font-size: 40px;
+	line-height: 48px;
+	color: #505762;
+}
+	.search h1 {
+		padding: 60px 0;
+	}
+
+/* The slide-down panel at the very top of the page. Like literally. It's above the page, hidden. */
+.slidey {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: -1;
+
+	overflow: hidden;
+	padding: 15px 0;
+
+	color: #DDD;
+	/*background-color: rgba(30, 30, 30, 0.5);*/
+	background-image: url("/images/slidey-background.png");
+	background-repeat: repeat;
+	border-bottom: 1px solid #e5e8ed;
+}
+	.js-enabled .slidey {
+		-webkit-transition: margin-top .2s;
+		-moz-transition: margin-top .2s;
+		transition: margin-top .2s;
+	}
+	.slidey b, .slidey label {
+		display: block;
+		font-weight: 500;
+		padding-bottom: 15px;
+
+		font-size: 15px;
+		font-weight: 500;
+	}
+	.slidey form, .slidey aside {
+		float: left;
+		width: 50%;
+	}
+		.slidey form input {
+			padding: 5px;
+			width: 75%;
+		}
+	.slidey li {
+		list-style: none;
+	}
+		.slidey a {
+			display: block;
+			text-decoration: none;
+
+			color: #DDD;
+		}
+			.slidey a:hover {
+				color: white;
+				text-decoration: underline;
+			}
+		.slidey li span {
+			float: right;
+			opacity: .6;
+		}
+
+/**
+ *  Site header with menus
+ */
+#top {
+	overflow: hidden;
+	padding: 20px 35px;
+	background: #fff;
+	border-bottom: 1px solid rgba(22,36,54,.1);
+	background-position-x: center;
+}
+	#top a {
+		float: left;
+
+		font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-size: 12px;
+		font-weight: 800;
+		letter-spacing: 0.05em;
+		text-decoration: none;
+		text-transform: uppercase;
+
+		color: white;
+	}
+	#top ul {
+		list-style: none;
+		float: right;
+	}
+		#top ul li {
+			float: left;
+			padding-left: 40px;
+		}
+		#top ul a, #top #logo {
+			display: inline-block;
+			opacity: .6;
+		}
+		#top ul a:hover, #top #logo:hover {
+			opacity: .8;
+		}
+		#top ul .active a {
+			opacity: 1;
+		}
+		#top ul img {
+			display: inline-block;
+			vertical-align: middle;
+			position: relative;
+			top: -2px;
+			width: 16px;
+			height: 16px;
+		}
+
+/**
+ *   Index page listing, category listing, search page results
+ */
+.items {
+	list-style: none;
+}
+	.items h2 {
+		font-size: 32px;
+		line-height: 41px;
+	}
+		.items h2 a {
+			display: block;
+			padding-top: 15px;
+			color: #4171b1;
+			text-decoration: none;
+		}
+			.items h2 a:hover {
+				color: #f00;
+			}
+	.items .content {
+		padding: 10px 0 0;
+		text-decoration: none;
+	}
+		.items .content p {
+			padding-bottom: 15px;
+		}
+
+hr.small {
+	max-width: 100px;
+	margin: 15px auto;
+	border-width: 4px;
+	border-color: white;
+	border-style: solid;
+}
+
+.site-heading {
+	padding: 100px 0 50px;
+	text-align: center;
+	color: white;
+}
+
+.site-heading h1 {
+	margin-top: 0;
+	font-size: 50px;
+	color: white;
+}
+
+.site-heading .subheading {
+	font-size: 24px;
+	line-height: 1.1;
+	display: block;
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	margin: 10px 0 0;
+}
+
+@media only screen and (min-width: 768px) {
+	.site-heading h1 {
+		font-size: 80px;
+	}
+}
+
+/**
+ *   Pagination
+ */
+.pagination {
+	overflow: hidden;
+	padding: 30px 0;
+	margin-bottom: 50px;
+
+	border-top: 1px solid rgba(22,36,54,.1);
+	border-bottom: 1px solid rgba(22,36,54,.1);
+}
+	.pagination:empty {
+		display: none;
+	}
+	.pagination a {
+		float: left;
+		text-decoration: none;
+
+		font-size: 13px;
+		font-weight: 600;
+
+		color: #6f7b8b;
+	}
+		.pagination a:hover {
+			color: #3c4857;
+		}
+	.pagination .next {
+		float: right;
+	}
+
+/**
+ *   Give some extra space to single-page wrappers
+ */
+.content {
+	padding-bottom: 50px;
+}
+	.content  ul, .content ol, .items li ul {
+		padding: 20px 30px;
+	}
+		.content ul ul, .content ol ol, .items li ul ul {
+			padding: 0 20px;
+		}
+	.content blockquote {
+		border-left: 3px solid #98a2b1;
+		padding-left: 15px;
+		margin: 15px 0;
+	}
+
+/**
+ *   Footnotes and straplines
+ */
+.footnote, .commentlist time, .items footer {
+	display: block;
+	padding: 5px 0 15px;
+
+	color: #98a2b1;
+	font-size: 14px;
 	font-style: italic;
 }
+	.footnote {
+		padding: 20px 0 40px;
+	}
 
-footer {
-  margin: 0 auto 0 auto;
-  width: 1024px;
-  padding: 50px 50px 100px 80px;
-	background-color: #ffa;
+/**
+ *   Comment form
+ */
+ul.commentlist {
+	margin-bottom: 40px;
+
+	list-style: none;
+	border-top: 1px solid rgba(22,36,54,.1);
+}
+	ul.commentlist .wrap {
+		position: relative;
+	}
+	ul.commentlist li {
+		padding: 40px 0;
+		border-bottom: 1px solid rgba(22,36,54,.1);
+	}
+		ul.commentlist time {
+			font-size: 13px;
+		}
+		ul.commentlist h2 {
+			font-size: 25px;
+			line-height: 33px;
+		}
+		ul.commentlist .counter {
+			position: absolute;
+			right: 0;
+			top: 0;
+
+			font-size: 25px;
+			font-weight: 300;
+			color: #cdd2da;
+		}
+
+#comment {
+	overflow: hidden;
+}
+	#comment label[for] {
+		display: none;
+	}
+	#comment p {
+		float: left;
+		width: 48%;
+		margin-right: 4%;
+		margin-bottom: 10px;
+
+		text-indent: 0;
+	}
+		#comment p + p {
+			margin-right: 0;
+		}
+		#comment p.textarea {
+			float: none;
+			width: 100%;
+		}
+	#comment input, #comment textarea {
+		width: 100%;
+		padding: 10px 15px;
+
+		font-size: 15px;
+		font-weight: normal;
+
+		border: 1px solid rgba(22,36,54,.2);
+		border-radius: 4px;
+	}
+		#comment input:focus, #comment textarea:focus {
+			outline: none;
+			background: #f7f9fc;
+		}
+		#comment textarea {
+			min-height: 150px;
+			max-height: 800px;
+			resize: vertical;
+		}
+	#comment button {
+		display: inline-block;
+		padding: 9px 18px;
+
+		background: #4e82ce;
+		color: #fff;
+
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+
+		font-size: 13px;
+		font-weight: 500;
+	}
+		#comment button:hover {
+			background: #3c6eb7;
+		}
+
+/**
+ *   Footer
+ */
+#bottom {
+	padding: 30px 0 40px;
+}
+	#bottom ul {
+		float: right;
+		list-style: none;
+	}
+		#bottom li {
+			float: left;
+			padding-left: 35px;
+
+			font-size: 14px;
+		}
+		#bottom a {
+			text-decoration: none;
+		}
+
+/**
+ *   Article page
+ */
+article p img {
+	margin: 0px auto;
+	display: block
 }
 
-
-footer ul {
-	display: inline-block;
+.wrap article h2, .wrap article h3, .wrap article h4 { /* article page */
+	margin: 20px 0 15px 0;
 }
 
-footer ul li {
-	display: inline;
+.main-wrap {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: white;
+	text-overflow: ellipsis;
+    overflow: hidden;
 }
 
+/**
+ *   Small device CSS, mostly to fix alignment
+ */
+ @media screen and (max-width: 400px) {
+#top {
+	position: relative;
+}
+
+#top .tray {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+#top #logo, #top ul {
+	float: none;
+}
+
+#top ul li {
+	padding: 10px 15px 0 0;
+}
+	
+.slidey form, .slidey aside {
+	float: none;
+	width: 100%;
+}
+
+.slidey form {
+	margin-bottom: 25px;
+}
+	
+#comment p, .footnote {
+	float: none;
+	width: 100%;
+	white-space: normal;
+}
+	
+#bottom {
+	padding: 20px 0;
+}
+
+#bottom small {
+	display: block;
+}
+
+#bottom ul {
+	overflow: hidden;
+	float: none;
+	margin-bottom: 15px;
+}
+
+#bottom li {
+	padding: 15px 15px 0 0;
+}
+ }
+ 

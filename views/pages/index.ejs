@@ -1,31 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <% include ../partials/head %>
-<body class="container">
-<header class="big-top">
-    <div class="container">
-        <nav role="navigation">
-            <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <% menu.forEach(function(item){ %>
-                    <li><a href="/pages/<%= item.url %>"><%= item.title %></a></li>
-                <% }) %>
-            </ul>
-        </nav>
-        <h1>Hello</h1>
-        <span class="motto">some very smart motto</span>
-    </div>
-</header>
-<main>
-    <% if (posts.length) { %>
-        <ul>
-            <% posts.forEach(function(post){ %>
-                <li><a href="/posts/<%= post.url %>"><%= post.title %></a></li>
-            <% }) %>
+<body class="posts home page">
+<% include ../partials/slidey %>
+<div class="main-wrap">
+    <header id="top" style="background-image: url('/images/galaxy.jpg');">
+        <a id="logo" href="/">softwaremanagement.cz</a>
+        <% include ../partials/navigation %>
+        <div class="site-heading">
+            <h1>Site name</h1>
+            <hr class="small">
+            <span class="subheading">Subtitle TODO</span>
+        </div>
+    </header> 
+    <section class="content">
+        <ul class="items">
+            <% if (posts.length) { posts.forEach(function(post){ %>
+                <li>
+                    <article class="wrap">
+                        <h2><a href="/posts/<%= post.url %>" title="<%= post.title %>"><%= post.title %></a></h2>
+                        <div class="content"><%= post.abstract %></div>
+                        <footer>Publikováno: <time datetime="TIME">1.1.2000</time>; tags: <a href="">tag1</a></footer>
+                    </article>
+                </li>
+            <% }) } %>
         </ul>
-    <% } %>
-</main>
-
-<% include ../partials/footer %>    
+    </section>
+    <% include ../partials/footer %>
+</div>
+<% include ../partials/analytics %>
 </body>
 </html>
