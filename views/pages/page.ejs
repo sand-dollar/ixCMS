@@ -5,12 +5,11 @@
 <% include ../partials/slidey %>
 <div class="main-wrap">
     <header id="top" style="background-image: url('/images/galaxy.jpg');">
-        <a id="logo" href="/">softwaremanagement.cz</a>
         <% include ../partials/navigation %>
     </header> 
     <section class="content wrap">
-        <h1><%= title %></h1>
-        <%= text %>
+        <h1><%= article.title %></h1>
+        <%- article.text %>
     </section>
     <% include ../partials/footer %>
 </div>

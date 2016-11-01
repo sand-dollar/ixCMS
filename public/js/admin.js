@@ -116,14 +116,14 @@ app.controller('editorCtrl', function($scope, $http, $window) {
   $http.get('/admin/' + $scope.collection + '/' + $scope.editor._id)
     .then(function(result) {
       Object.assign($scope.editor, result.data);
-      simplemde.value($scope.editor.text);
+      simplemde.value($scope.editor.markdown);
     }, function(error) {
       console.log(error);
     });
 
 
   $scope.docSave = function() {
-    $scope.editor.text = simplemde.value();
+    $scope.editor.markdown = simplemde.value();
     $http.post('/admin/editor/' + $scope.collection + '/save', $scope.editor)
       .then(function(result) {
         console.log('saved');

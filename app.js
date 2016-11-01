@@ -4,6 +4,7 @@
  * @module app
  */
 
+let path = require('path');
 let express = require('express');
 let bodyParser = require('body-parser');
 let mongodb = require('mongodb');
@@ -13,7 +14,7 @@ let app = express();
 let admin = require('./js/admin');
 let config = require('./js/config');
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(bodyParser.json()); // for parsing application/json
 // app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
@@ -56,6 +57,26 @@ function getPostList(db) {
 }
 
 /**
+ * Get basic site configuration as siteName, siteMotto etc.
+ */
+function getSiteSettings(db) {
+  return new Promise((resolve, reject) => {
+    db.collection('settings').findOne({_id: config.settingsId}, {siteName: true, siteMotto: true})
+      .then((result) => {
+        db.close();
+        if (result) {
+          resolve(result);
+        } else {
+          resolve({});
+        }
+      }, (err) => {
+        reject(new Error(err));
+      }
+    );
+  });
+}
+
+/**
  * Get page or post.
  */
 function getArticle(collection, url) {
@@ -66,13 +87,13 @@ function getArticle(collection, url) {
         reject(new Error(error));
       } else {
         Promise.all([
-          db.collection(collection).findOne({url: url}),
+          db.collection(collection).findOne({url: url}, {markdown: false}),
           getMenu(db),
+          getSiteSettings(db),
         ])
-          .then(([article, menu]) => {
+          .then(([article, menu, site]) => {
             db.close();
-            article.menu = menu;
-            resolve(article);
+            resolve({article, menu, site});
           })
           .catch((err) => {
             // Receives first rejection among the Promises
@@ -97,10 +118,11 @@ function getIndexPage() {
         Promise.all([
           getPostList(db),
           getMenu(db),
+          getSiteSettings(db),
         ])
-          .then(([posts, menu]) => {
+          .then(([posts, menu, site]) => {
             db.close();
-            resolve({posts, menu});
+            resolve({posts, menu, site});
           })
           .catch((err) => {
             // Receives first rejection among the Promises

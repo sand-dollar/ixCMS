@@ -16,6 +16,7 @@
     "express": "^4.14.0",
     "express-session": "^1.14.1",
     "font-awesome": "^4.7.0",
+    "marky-markdown": "^9.0.1",
     "mongodb": "^2.2.10",
     "simplemde": "^1.11.2"
   }

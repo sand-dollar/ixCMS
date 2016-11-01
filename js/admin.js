@@ -5,6 +5,7 @@
  * @module admin
  */
 
+let marky = require("marky-markdown");
 let express = require('express');
 let mongodb = require('mongodb');
 let config = require('./config');
@@ -153,6 +154,7 @@ function getArticle(collection, id) {
  * Save article (page or post) with given ID.
  */
 function saveArticle(collection, id, article) {
+  article.text = marky(article.markdown);
   return new Promise((resolve, reject) => {
     MongoClient.connect(config.databaseUrl, (error, db) => {
       if (error) {

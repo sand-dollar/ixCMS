@@ -10,19 +10,19 @@
   <form class="nice-form" ng-submit="saveSettings()">
     <div class="field">
         <label for="siteName">Site name:</label>
-        <input id="siteName" type="text" placeholder="Enter name of your site" ng-model="settings.siteName">
+        <input id="siteName" type="text" placeholder="Enter name of your site" ng-model="settings.siteName" autocomplete="off">
     </div>
     <div class="field">
         <label for="siteMotto">Site motto:</label>
-        <input id="siteMotto" type="text" placeholder="This text is displayed under site name on index" ng-model="settings.siteMotto">
+        <input id="siteMotto" type="text" placeholder="This text is displayed under site name on index" ng-model="settings.siteMotto" autocomplete="off">
     </div>
     <div class="field">
         <label for="email">E-mail:</label>
-        <input id="email" type="email" placeholder="Your e-mail used for login" ng-model="settings.email">
+        <input id="email" type="email" placeholder="Your e-mail used for login" ng-model="settings.email" autocomplete="off">
     </div>
     <div class="field">
         <label for="password">Password:</label>
-        <input id="password" type="password" placeholder="Login password for administration" ng-model="settings.password">
+        <input id="password" type="password" placeholder="Login password for administration" ng-model="settings.password" autocomplete="off">
     </div>
     <div class="field-button">
         <button type="submit">Save</button>

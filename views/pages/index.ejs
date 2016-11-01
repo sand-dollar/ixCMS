@@ -5,12 +5,11 @@
 <% include ../partials/slidey %>
 <div class="main-wrap">
     <header id="top" style="background-image: url('/images/galaxy.jpg');">
-        <a id="logo" href="/">softwaremanagement.cz</a>
         <% include ../partials/navigation %>
         <div class="site-heading">
-            <h1>Site name</h1>
+            <h1><%= site.siteName %></h1>
             <hr class="small">
-            <span class="subheading">Subtitle TODO</span>
+            <span class="subheading"><%= site.siteMotto %></span>
         </div>
     </header> 
     <section class="content">
@@ -19,7 +18,7 @@
                 <li>
                     <article class="wrap">
                         <h2><a href="/posts/<%= post.url %>" title="<%= post.title %>"><%= post.title %></a></h2>
-                        <div class="content"><%= post.abstract %></div>
+                        <div class="content"><%- post.abstract %></div>
                         <footer>Publikováno: <time datetime="TIME">1.1.2000</time>; tags: <a href="">tag1</a></footer>
                     </article>
                 </li>
