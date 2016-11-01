@@ -46,7 +46,7 @@ function getMenu(db) {
  */
 function getPostList(db) {
   return new Promise((resolve, reject) => {
-    db.collection('posts').find({}, {text: false}).toArray((error, result) => {
+    db.collection('posts').find({status: 'published'}, {text: false}).toArray((error, result) => {
       if (error) {
         reject(new Error(error));
       } else {
@@ -87,7 +87,7 @@ function getArticle(collection, url) {
         reject(new Error(error));
       } else {
         Promise.all([
-          db.collection(collection).findOne({url: url}, {markdown: false}),
+          db.collection(collection).findOne({url: url, status: 'published'}, {markdown: false}),
           getMenu(db),
           getSiteSettings(db),
         ])
