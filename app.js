@@ -222,5 +222,5 @@ app.get('/logout', (req, res) => {
 });
 
 app.listen(config.appPort, () => {
-  console.log('ixCMS listening on port 3000!');
+  console.log('ixCMS listening on port ' + config.appPort + '!');
 });
