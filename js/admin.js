@@ -155,6 +155,13 @@ function getArticle(collection, id) {
  */
 function saveArticle(collection, id, article) {
   article.text = marky(article.markdown);
+  if (article.tags) {
+    let arr = article.tags.split(',');
+    arr.forEach(function(part, index) {
+      arr[index] = part.trim();
+    });
+    article.tags = arr;
+  }
   return new Promise((resolve, reject) => {
     MongoClient.connect(config.databaseUrl, (error, db) => {
       if (error) {

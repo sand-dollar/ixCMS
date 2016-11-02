@@ -108,6 +108,7 @@ app.controller('editorCtrl', function($scope, $http, $window) {
   $scope.editor = {};
   $scope.editor.status = 'published';
   $scope.editor.allowComments = true;
+  $scope.editor.date = new Date();
 
   let location = $window.location.pathname.split('/');
   $scope.editor._id = location[location.length - 1];
@@ -115,6 +116,7 @@ app.controller('editorCtrl', function($scope, $http, $window) {
 
   $http.get('/admin/' + $scope.collection + '/' + $scope.editor._id)
     .then(function(result) {
+      result.data.tags = result.data.tags.join(', ');
       Object.assign($scope.editor, result.data);
       simplemde.value($scope.editor.markdown);
     }, function(error) {

@@ -18,15 +18,15 @@
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="tags">Tags:</label>
-        <input type="text" id="tags" ng-model="editor.tags">
-    </div>
-    <div class="field" ng-show="collection === 'posts'">
-        <label for="date">Date:</label>
-        <input type="date" id="date" ng-model="editor.date">
+        <input type="text" id="tags" ng-model="editor.tags" placeholder="Comma separated tags">
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="abstract">Abstract:</label>
         <div id="abstract" class="textareadiv" contenteditable="true" ng-model="editor.abstract">{{ editor.abstract }}</div>
+    </div>
+    <div class="field" ng-show="collection === 'posts'">
+        <label for="date">Date:</label>
+        <input type="date" id="date" ng-model="editor.date">
     </div>
     <div class="field" ng-show="collection === 'posts'">
         <label for="status">Status:</label>

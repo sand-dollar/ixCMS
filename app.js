@@ -6,6 +6,7 @@
 
 let path = require('path');
 let express = require('express');
+var expressHelpers = require('express-helpers');
 let bodyParser = require('body-parser');
 let mongodb = require('mongodb');
 let session = require('express-session');
@@ -24,6 +25,7 @@ app.use(session({
 }));
 app.set('view engine', 'ejs');
 app.use('/admin', admin);
+expressHelpers(app);
 
 
 /**
@@ -43,10 +45,16 @@ function getMenu(db) {
 
 /**
  * Helper function to get list of all posts from the database as an array.
+ *
+ * @param tag parameter is optional.
  */
-function getPostList(db) {
+function getPostList(db, tag = '') {
+  let filter = {status: 'published'};
+  if (tag) {
+    filter.tags = tag;
+  }
   return new Promise((resolve, reject) => {
-    db.collection('posts').find({status: 'published'}, {text: false}).toArray((error, result) => {
+    db.collection('posts').find(filter, {text: false}).toArray((error, result) => {
       if (error) {
         reject(new Error(error));
       } else {
@@ -107,8 +115,10 @@ function getArticle(collection, url) {
 
 /**
  * Get list of posts
+ *
+ * @param Tag parameter is optional.
  */
-function getIndexPage() {
+function getIndexPage(tag = '') {
   return new Promise((resolve, reject) => {
     MongoClient.connect(config.databaseUrl, (error, db) => {
       if (error) {
@@ -116,7 +126,7 @@ function getIndexPage() {
         reject(new Error(error));
       } else {
         Promise.all([
-          getPostList(db),
+          getPostList(db, tag),
           getMenu(db),
           getSiteSettings(db),
         ])
@@ -164,6 +174,18 @@ app.get('/pages/:page', (req, res) => {
 app.get('/posts/:post', (req, res) => {
   getArticle('posts', req.params.post).then((result) => {
     res.render('pages/page', result);
+  }, (error) => {
+    console.log(error);
+    res.sendStatus(400);
+  });
+});
+
+/**
+ * List all posts with the same tag.
+ */
+app.get('/tags/:tag', (req, res) => {
+  getIndexPage(req.params.tag).then((result) => {
+    res.render('pages/search', result);
   }, (error) => {
     console.log(error);
     res.sendStatus(400);
