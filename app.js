@@ -54,7 +54,7 @@ function getPostList(db, tag = '') {
     filter.tags = tag;
   }
   return new Promise((resolve, reject) => {
-    db.collection('posts').find(filter, {text: false}).toArray((error, result) => {
+    db.collection('posts').find(filter, {text: false, markdown: false}).sort({date: -1}).toArray((error, result) => {
       if (error) {
         reject(new Error(error));
       } else {

@@ -11,7 +11,7 @@
       <li><a href ng-click="docExit()" class="color3"><i class="fa fa-chevron-right" aria-hidden="true"></i>Exit without saving</a></li>
     </ul>
   </div>
-  <form class="nice-form editor-border" ng-show="showEditor">
+  <form class="nice-form editor-border" ng-style="{'display': showEditor ? 'block' : 'none'}">
     <div class="field">
         <label for="url">Article URL:</label>
         <input id="url" type="text" ng-model="editor.url">

@@ -90,9 +90,10 @@ function getOverview() {
           db.collection('pages').count(),
           db.collection('posts').count(),
           db.collection('settings').findOne({_id: config.settingsId}, {siteName: true}),
+          db.collection('posts').findOne({}, {sort: [['date', 'desc']]})  // Get date of the latest post
         ])
-          .then(([pageCount, postCount, siteName]) => {
-            resolve({pageCount, postCount, siteName: siteName.siteName});
+          .then(([pageCount, postCount, siteName, latestPost]) => {
+            resolve({pageCount, postCount, siteName: siteName.siteName, latestPost});
           })
           .catch((err) => {
             // Receives first rejection among the Promises
@@ -113,7 +114,7 @@ function listArticles(collection) {
         console.log('Unable to connect to the mongoDB server. Error:', error);
         reject(new Error(error));
       } else {
-        db.collection(collection).find({}, {text: false}).toArray((err, docs) => {
+        db.collection(collection).find({}, {text: false, markdown: false}).sort({date: -1}).toArray((err, docs) => {
           db.close();
           if (err) {
             reject(new Error(err));

@@ -42,10 +42,14 @@ app.controller('settingsCtrl', function($scope, $http) {
 });
 
 app.controller('overviewCtrl', function($scope, $http) {
+  function getDaysDiff(time) {
+    return Math.floor((new Date() - new Date(time)) / (1000 * 60 * 60 * 24));
+  }
+
   $http.get('/admin/overview')
     .then(function(result) {
       $scope.overview = result.data;
-      console.log($scope.overview);
+      $scope.overview.lastPost = getDaysDiff(result.data.latestPost.date);
     }, function(error) {
       console.log(error);
     });

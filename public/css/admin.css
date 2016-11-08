@@ -176,6 +176,7 @@ main {
 
 .editor-border {
     border: 8px solid #008CBA;
+    display: none;
 }
 
 .nice-form {
