@@ -9,7 +9,7 @@
     <table class="overview-table">
       <tr>
         <td>Site name</td>
-        <td>{{overview.siteName}}</td>
+        <td>{{overview.settings.siteName}}</td>
       </tr>
       <tr>
         <td>Number of posts</td>
@@ -33,14 +33,14 @@
     <table class="overview-table">
       <tr>
         <td>Last login</td>
-        <td>HH:MM DD.MM.YYYY [IP]</td>
+        <td>{{overview.settings.lastLogin.time}} [{{overview.settings.lastLogin.ip}}]</td>
       </tr>
       <tr>
-        <td>Unique visitors today</td>
+        <td>Unique visitors yesterday</td>
         <td>-</td>
       </tr>
       <tr>
-        <td>Pages shown today</td>
+        <td>Pages shown yesterday</td>
         <td>-</td>
       </tr>
       <tr>

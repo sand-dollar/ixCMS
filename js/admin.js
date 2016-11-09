@@ -89,11 +89,11 @@ function getOverview() {
         Promise.all([
           db.collection('pages').count(),
           db.collection('posts').count(),
-          db.collection('settings').findOne({_id: config.settingsId}, {siteName: true}),
+          db.collection('settings').findOne({_id: config.settingsId}, {siteName: true, lastLogin: true}),
           db.collection('posts').findOne({}, {sort: [['date', 'desc']]})  // Get date of the latest post
         ])
-          .then(([pageCount, postCount, siteName, latestPost]) => {
-            resolve({pageCount, postCount, siteName: siteName.siteName, latestPost});
+          .then(([pageCount, postCount, settings, latestPost]) => {
+            resolve({pageCount, postCount, settings, latestPost});
           })
           .catch((err) => {
             // Receives first rejection among the Promises

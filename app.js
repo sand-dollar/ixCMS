@@ -145,6 +145,28 @@ function getIndexPage(tag = '') {
 }
 
 /**
+ * Save ip and time of the last login
+ *
+ * TODO: We should be more generic and use this function to monitor all user page views.
+ */
+function saveLastLogin(ip) {
+  MongoClient.connect(config.databaseUrl, (error, db) => {
+      if (error) {
+        console.log('Unable to connect to the mongoDB server. Error:', error);
+      } else {
+        db.collection('settings').findAndModify(
+          {_id: config.settingsId},
+          [],
+          {$set: {lastLogin: {ip, time: new Date()}}},
+          {new: true}
+        ).catch(error => {
+          console.log(error);
+        });
+      }
+  });
+}
+
+/**
  * Render index page (list of all posts).
  */
 app.get('/', (req, res) => {
@@ -207,6 +229,7 @@ app.post('/authenticate', (req, res) => {
   let password = req.body.password;
   if(username && username === config.username && password && password === config.password) {
     req.session.loggedIn = true;
+    saveLastLogin(req.ip);
     res.sendStatus(200);
   } else {
     res.sendStatus(401);
