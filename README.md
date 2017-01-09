@@ -6,9 +6,9 @@ more time to continue. Sorry.
 
 The development is NOT complete and some features are still missing.
 
-![theme](screenshot_1.png 'Default theme')
+![theme](screenshot_1.jpg 'Default theme')
 
-![admin](screenshot_2.png 'Admin area')
+![admin](screenshot_2.jpg 'Admin area')
 
 ## Licence
 
